@@ -1,0 +1,406 @@
+```react
+import React, { useState, useEffect } from 'react';
+import { 
+  FileText, Download, Printer, CheckSquare, Scale, 
+  Briefcase, PenTool, ArrowLeft, Gavel, FileSignature, 
+  Building, ShieldAlert, BookOpen, Languages, Eye, X, 
+  HeartHandshake, FileDown
+} from 'lucide-react';
+
+// --- TEMPLATE DATABASE ---
+
+const TEMPLATES = {
+  // ==============================
+  // CATEGORY: CRIMINAL BAILS
+  // ==============================
+  bail_post: {
+    id: 'bail_post',
+    category: 'Criminal',
+    type: 'Bail',
+    name: 'Post-Arrest Bail (S. 497)',
+    desc: 'Application for release after arrest.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'petitioner', label: 'Petitioner Name', type: 'text' },
+          { key: 'caste', label: 'Caste', type: 'text' },
+          { key: 'accused', label: 'Accused Name (if diff)', type: 'text' },
+          { key: 'fir', label: 'FIR Number', type: 'text' },
+          { key: 'offence', label: 'Offence (Sections)', type: 'text' },
+          { key: 'ps', label: 'Police Station', type: 'text' }
+        ],
+        checklist: ['Copy of FIR', 'Remand Order', 'Vakalatnama', 'ID Copy'],
+        generate: (d) => `IN THE COURT OF ${d.court || '______'}\n\nCrl. Misc. No. ____ / ${new Date().getFullYear()}\n\n${d.petitioner || '______'} caste ${d.caste || '______'} \n(Petitioner)\n\nVERSUS\n\nThe State\n(Respondent)\n\nPETITION FOR POST-ARREST BAIL UNDER SECTION 497 Cr.P.C\n\nCASE FIR NO: ${d.fir || '___'} \nOFFENCE: ${d.offence || '___'}\nPOLICE STATION: ${d.ps || '___'}\n\nRespectfully Sheweth:\n\n1. That the Petitioner was arrested in the above case and is currently behind bars.\n2. That the Petitioner is innocent and has been falsely implicated due to mala fide intentions.\n3. That the investigation is complete and no recovery is to be effected.\n4. That the offence does not fall within the prohibitory clause of Section 497 Cr.P.C.\n\nPRAYER:\nIt is respectfully prayed that this petition may be accepted and the Petitioner be released on bail.\n\nPetitioner\nThrough Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'petitioner', label: 'سائل / ملزم', type: 'text' },
+          { key: 'fir', label: 'مقدمہ نمبر', type: 'text' },
+          { key: 'offence', label: 'بجرم', type: 'text' },
+          { key: 'ps', label: 'تھانہ', type: 'text' }
+        ],
+        checklist: ['ایف آئی آر', 'وکالت نامہ', 'شناختی کارڈ'],
+        generate: (d) => `بعدالت ${d.court || 'جناب سیشن جج صاحب'}\n\nدرخواست نمبر: ______\n\n${d.petitioner || '______'}\n(سائل)\nبنام\nسرکار\n\nدرخواست ضمانت بعد از گرفتاری زیر دفعہ 497\n\nمقدمہ نمبر: ${d.fir || '___'}\nبجرم: ${d.offence || '___'}\nتھانہ: ${d.ps || '___'}\n\nجناب عالی!\n\n۱. یہ کہ سائل کو مقدمہ ہذا میں گرفتار کیا گیا ہے۔\n۲. یہ کہ سائل بے گناہ ہے اور اسے جھوٹا ملوث کیا گیا ہے۔\n۳. یہ کہ تفتیش مکمل ہے اور سائل سے کوئی برآمدگی باقی نہیں ہے۔\n\nاستدعا:\nاستدعا ہے کہ ضمانت منظور فرمائی جائے۔\n\nعرضے\nسائل بذریعہ کونسل`
+      }
+    }
+  },
+  
+  bail_pre: {
+    id: 'bail_pre',
+    category: 'Criminal',
+    type: 'Bail',
+    name: 'Pre-Arrest Bail (S. 498)',
+    desc: 'Application for protection before arrest.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'petitioner', label: 'Petitioner', type: 'text' },
+          { key: 'fir', label: 'FIR No', type: 'text' },
+          { key: 'ps', label: 'Police Station', type: 'text' }
+        ],
+        checklist: ['Copy of FIR', 'Affidavit (Mandatory)', 'Vakalatnama'],
+        generate: (d) => `IN THE COURT OF ${d.court || '______'}\n\n${d.petitioner} v. The State\n\nPETITION FOR PRE-ARREST BAIL U/S 498 Cr.P.C\n\nRespectfully Sheweth:\n1. That the Petitioner has been nominated in FIR ${d.fir} at PS ${d.ps}.\n2. That the Petitioner apprehends imminent arrest by the police due to ulterior motives.\n3. That the Petitioner is ready to join investigation.\n\nPRAYER:\nAd-interim pre-arrest bail be granted.\n\nPetitioner`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت', type: 'text' },
+          { key: 'petitioner', label: 'سائل', type: 'text' },
+          { key: 'fir', label: 'مقدمہ نمبر', type: 'text' },
+          { key: 'ps', label: 'تھانہ', type: 'text' }
+        ],
+        checklist: ['ایف آئی آر', 'بیان حلفی', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'جناب سیشن جج صاحب'}\n\n${d.petitioner} بنام سرکار\n\nدرخواست ضمانت قبل از گرفتاری\n\n۱. یہ کہ سائل کے خلاف مقدمہ نمبر ${d.fir} تھانہ ${d.ps} درج ہے۔\n۲. یہ کہ پولیس سائل کو گرفتار کر کے تذلیل کرنا چاہتی ہے۔\n۳. یہ کہ سائل شامل تفتیش ہونے کو تیار ہے۔\n\nاستدعا:\nعبوری ضمانت منظور فرمائی جائے۔\n\nعرضے\nسائل`
+      }
+    }
+  },
+
+  // ==============================
+  // CATEGORY: CIVIL SUITS
+  // ==============================
+  suit_recovery: {
+    id: 'suit_recovery',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Recovery (Order 37)',
+    desc: 'Summary suit for checks/promissory notes.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff', type: 'text' },
+          { key: 'defendant', label: 'Defendant', type: 'text' },
+          { key: 'amount', label: 'Amount (PKR)', type: 'number' },
+          { key: 'cheque', label: 'Cheque No', type: 'text' }
+        ],
+        checklist: ['Original Cheque', 'Legal Notice', 'Court Fee'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'Senior Civil Judge'}\n\n${d.plaintiff}\nVERSUS\n${d.defendant}\n\nSUIT FOR RECOVERY OF RS. ${d.amount} UNDER ORDER XXXVII CPC\n\nRespectfully Sheweth:\n1. That the Defendant issued Cheque No. ${d.cheque} for Rs. ${d.amount}.\n2. That the cheque was dishonoured on presentation.\n3. That despite legal notice, the Defendant failed to pay.\n\nPRAYER:\nDecree for Rs. ${d.amount} be passed.\n\nPlaintiff`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ', type: 'text' },
+          { key: 'amount', label: 'رقم دعویٰ', type: 'text' },
+          { key: 'cheque', label: 'چیک نمبر', type: 'text' }
+        ],
+        checklist: ['اصل چیک', 'لیگل نوٹس', 'کورٹ فیس'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\n${d.plaintiff} بنام ${d.defendant}\n\nدعویٰ دلاپانے مبلغ ${d.amount} روپے آرڈر 37 ضابطہ دیوانی\n\n۱. یہ کہ مدعاعلیہ نے مبلغ ${d.amount} کا چیک نمبر ${d.cheque} دیا تھا۔\n۲. یہ کہ چیک ڈس اونر ہو گیا ہے۔\n۳. یہ کہ مدعاعلیہ رقم ادا نہیں کر رہا۔\n\nاستدعا:\nڈگری صادر فرمائی جائے۔\n\nعرضے\nمدعی`
+      }
+    }
+  },
+
+  suit_family: {
+    id: 'suit_family',
+    category: 'Family',
+    type: 'Suit',
+    name: 'Dissolution of Marriage (Khula)',
+    desc: 'Family court suit for separation.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Family Judge', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff (Wife)', type: 'text' },
+          { key: 'defendant', label: 'Defendant (Husband)', type: 'text' },
+          { key: 'dower', label: 'Dower Amount', type: 'text' }
+        ],
+        checklist: ['Nikahnama Copy', 'List of Witnesses', 'ID Copies'],
+        generate: (d) => `IN THE FAMILY COURT OF ${d.court || 'Lahore'}\n\n${d.plaintiff} (Wife)\nVERSUS\n${d.defendant} (Husband)\n\nSUIT FOR DISSOLUTION OF MARRIAGE ON THE BASIS OF KHULA\n\nRespectfully Sheweth:\n1. That the parties were married according to Muslim rites.\n2. That the attitude of the husband has become harsh and cruel.\n3. That the wife has developed hatred in her heart and cannot live within the limits ordained by Allah.\n4. That the wife is ready to forego her Dower of ${d.dower}.\n\nPRAYER:\nDecree for dissolution of marriage be passed.\n\nPlaintiff`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'فیملی جج', type: 'text' },
+          { key: 'plaintiff', label: 'مدعیہ', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ', type: 'text' },
+          { key: 'dower', label: 'حق مہر', type: 'text' }
+        ],
+        checklist: ['نکاح نامہ', 'گواہان کی فہرست'],
+        generate: (d) => `بعدالت ${d.court || 'جناب جج فیملی کورٹ'}\n\n${d.plaintiff}\nبنام\n${d.defendant}\n\nدعویٰ تنسیخ نکاح بربنائے خلع\n\n۱. یہ کہ فریقین کا نکاح شرعی طریقہ سے ہوا۔\n۲. یہ کہ خاوند کا رویہ انتہائی ظالمانہ ہے۔\n۳. یہ کہ مدعیہ کے دل میں نفرت پیدا ہو چکی ہے اور وہ حدود اللہ میں نہیں رہ سکتی۔\n۴. یہ کہ مدعیہ اپنا حق مہر ${d.dower} چھوڑنے کو تیار ہے۔\n\nاستدعا:\nڈگری تنسیخ نکاح صادر فرمائی جائے۔\n\nعرضے\nمدعیہ`
+      }
+    }
+  },
+
+  // ==============================
+  // CATEGORY: DEEDS & CONTRACTS
+  // ==============================
+  rent_agreement: {
+    id: 'rent_agreement',
+    category: 'Corporate',
+    type: 'Deed',
+    name: 'Rent Agreement',
+    desc: 'Standard tenancy contract.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'landlord', label: 'Landlord Name', type: 'text' },
+          { key: 'tenant', label: 'Tenant Name', type: 'text' },
+          { key: 'property', label: 'Property Address', type: 'text' },
+          { key: 'rent', label: 'Monthly Rent', type: 'number' }
+        ],
+        checklist: ['Stamp Paper', 'Witness CNICs', 'Title Proof'],
+        generate: (d) => `RENT AGREEMENT\n\nThis Agreement is made between:\n1. ${d.landlord} (Landlord)\n2. ${d.tenant} (Tenant)\n\nRegarding property: ${d.property}\n\nTERMS:\n1. The monthly rent is Rs. ${d.rent}.\n2. The tenancy period is 11 months.\n3. The tenant shall pay electricity bills.\n\nLandlord: _______\nTenant: _______`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'landlord', label: 'مالک مکان', type: 'text' },
+          { key: 'tenant', label: 'کرایہ دار', type: 'text' },
+          { key: 'property', label: 'پتہ جائیداد', type: 'text' },
+          { key: 'rent', label: 'ماہانہ کرایہ', type: 'text' }
+        ],
+        checklist: ['اسٹام پیپر', 'گواہان'],
+        generate: (d) => `اقرار نامہ کرایہ داری\n\nفریق اول: ${d.landlord} (مالک)\nفریق دوئم: ${d.tenant} (کرایہ دار)\n\nبابت جائیداد: ${d.property}\n\nشرائط:\n۱. ماہانہ کرایہ مبلغ ${d.rent} روپے ہوگا۔\n۲. مدت کرایہ داری ۱۱ ماہ ہوگی۔\n۳. بجلی و گیس کے بل کرایہ دار ادا کرے گا۔\n\nدستخط فریق اول: ______\nدستخط فریق دوئم: ______`
+      }
+    }
+  },
+
+  // ==============================
+  // CATEGORY: AFFIDAVITS
+  // ==============================
+  affidavit_gen: {
+    id: 'affidavit_gen',
+    category: 'Affidavits',
+    type: 'Affidavit',
+    name: 'General Affidavit',
+    desc: 'Sworn declaration on oath.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'deponent', label: 'Deponent Name', type: 'text' },
+          { key: 'cnic', label: 'CNIC', type: 'text' },
+          { key: 'content', label: 'Declaration', type: 'textarea' }
+        ],
+        checklist: ['Stamp Paper', 'Oath Commissioner'],
+        generate: (d) => `AFFIDAVIT\n\nI, ${d.deponent}, CNIC ${d.cnic}, do hereby solemnly affirm:\n\n1. ${d.content}\n2. That the contents are true.\n\nDEPONENT`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'deponent', label: 'بیان دہندہ', type: 'text' },
+          { key: 'cnic', label: 'شناختی کارڈ', type: 'text' },
+          { key: 'content', label: 'بیان', type: 'textarea' }
+        ],
+        checklist: ['اسٹام پیپر', 'تصدیق'],
+        generate: (d) => `بیان حلفی\n\nمیں مسمی ${d.deponent} شناختی کارڈ نمبر ${d.cnic} حلفاً بیان کرتا ہوں کہ:\n\n۱. ${d.content}\n۲. یہ کہ بیان درست ہے۔\n\nبیان دہندہ`
+      }
+    }
+  }
+};
+
+export default function LegalSuiteProMax() {
+  const [view, setView] = useState('home');
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [selectedTemplateId, setSelectedTemplateId] = useState(null);
+  const [language, setLanguage] = useState('English');
+  const [formData, setFormData] = useState({});
+  const [preview, setPreview] = useState('');
+  const [showPrintPreview, setShowPrintPreview] = useState(false);
+  const [pdfLibLoaded, setPdfLibLoaded] = useState(false);
+
+  // Load html2pdf script dynamically
+  useEffect(() => {
+    if (!document.getElementById('html2pdf-script')) {
+      const script = document.createElement('script');
+      script.id = 'html2pdf-script';
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      script.onload = () => setPdfLibLoaded(true);
+      document.body.appendChild(script);
+    } else {
+      setPdfLibLoaded(true);
+    }
+  }, []);
+
+  // --- HELPERS ---
+  const categories = ['All', 'Criminal', 'Civil', 'Family', 'Corporate', 'Affidavits'];
+
+  const handleTemplateSelect = (id) => {
+    setSelectedTemplateId(id);
+    setLanguage('English'); 
+    setFormData({});
+    setPreview(TEMPLATES[id].formats.English.generate({}));
+    setView('drafter');
+  };
+
+  const handleLanguageSwitch = (lang) => {
+    setLanguage(lang);
+    setFormData({});
+    setPreview(TEMPLATES[selectedTemplateId].formats[lang].generate({}));
+  };
+
+  const handleInputChange = (key, value) => {
+    const newData = { ...formData, [key]: value };
+    setFormData(newData);
+    setPreview(TEMPLATES[selectedTemplateId].formats[language].generate(newData));
+  };
+
+  // --- DOWNLOAD HANDLERS ---
+  
+  // 1. FIXED WORD DOWNLOAD
+  const handleDownloadWord = () => {
+    const tmpl = TEMPLATES[selectedTemplateId];
+    // Create HTML structure for Word
+    const htmlContent = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head>
+        <meta charset='utf-8'>
+        <title>${tmpl.name}</title>
+        <style>
+          body { font-family: ${language === 'Urdu' ? 'Arial' : 'Times New Roman'}; font-size: 12pt; }
+        </style>
+      </head>
+      <body style="direction: ${language === 'Urdu' ? 'rtl' : 'ltr'}">
+        ${preview.replace(/\n/g, "<br/>")}
+      </body>
+      </html>
+    `;
+
+    // Create Blob
+    const blob = new Blob(['\ufeff', htmlContent], {
+      type: 'application/msword'
+    });
+
+    // Trigger Download
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = `${tmpl.name}_${language}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(href);
+  };
+
+  // 2. NEW PDF DOWNLOAD
+  const handleDownloadPDF = () => {
+    if (!pdfLibLoaded || !window.html2pdf) {
+      alert("PDF Engine Loading... Please try again in 3 seconds.");
+      return;
+    }
+    
+    const element = document.getElementById('document-preview-content');
+    const tmpl = TEMPLATES[selectedTemplateId];
+    
+    const opt = {
+      margin: [25, 25, 25, 25], // mm
+      filename: `${tmpl.name}_${language}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    window.html2pdf().set(opt).from(element).save();
+  };
+
+  // --- HOME SCREEN ---
+  const HomeScreen = () => (
+    <div className="p-6 max-w-7xl mx-auto animate-in fade-in duration-500">
+      <div className="text-center mb-10">
+        <h2 className="text-4xl font-extrabold text-slate-800 mb-3">Legal Practice Suite</h2>
+        <p className="text-slate-500">Ultimate Edition • Civil, Criminal, Family & Corporate • Bilingual</p>
+      </div>
+
+      <div className="flex justify-center gap-2 mb-8 flex-wrap">
+        {categories.map(cat => (
+          <button 
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory === cat ? 'bg-slate-800 text-white shadow-lg' : 'bg-white text-slate-500 hover:bg-slate-100'}`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {Object.values(TEMPLATES)
+          .filter(t => activeCategory === 'All' || t.category === activeCategory)
+          .map((t) => (
+          <div key={t.id} onClick={() => handleTemplateSelect(t.id)} className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
+            <div className={`absolute top-0 left-0 w-1 h-full ${
+              t.category === 'Criminal' ? 'bg-red-500' : 
+              t.category === 'Civil' ? 'bg-blue-500' : 
+              t.category === 'Family' ? 'bg-pink-500' :
+              t.category === 'Corporate' ? 'bg-emerald-500' : 'bg-yellow-500'
+            }`}></div>
+            
+            <div className="flex items-center justify-between mb-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                t.category === 'Criminal' ? 'bg-red-50 text-red-600' : 
+                t.category === 'Civil' ? 'bg-blue-50 text-blue-600' : 
+                t.category === 'Family' ? 'bg-pink-50 text-pink-600' :
+                t.category === 'Corporate' ? 'bg-emerald-50 text-emerald-600' : 'bg-yellow-50 text-yellow-600'
+              }`}>
+                {t.category === 'Criminal' ? <ShieldAlert className="w-5 h-5" /> : 
+                 t.category === 'Civil' ? <Gavel className="w-5 h-5" /> :
+                 t.category === 'Family' ? <HeartHandshake className="w-5 h-5" /> :
+                 t.category === 'Corporate' ? <Building className="w-5 h-5" /> : <FileSignature className="w-5 h-5" />}
+              </div>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.category}</span>
+            </div>
+            
+            <h3 className="text-lg font-bold text-slate-800 mb-1 group-hover:text-blue-700 transition-colors leading-tight">{t.name}</h3>
+            <p className="text-xs text-slate-500 mb-4 line-clamp-2">{t.desc}</p>
+            
+            <div className="flex gap-2 mt-auto pt-2 border-t border-slate-50">
+               <span className="text-[10px] px-2 py-1 bg-slate-100 rounded text-slate-600 font-semibold">EN</span>
+               <span className="text-[10px] px-2 py-1 bg-green-100 rounded text-green-700 font-serif font-semibold">UR</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col h-screen bg-slate-50 text-slate-900 font-sans">
+      
+      {/* Navbar */}
+      <header className="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-40">
+        <div className="flex items-center gap-3">
+          <Scale className="w-8 h-8 text-yellow-500" />
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">Legal Practice Suite</h1>
+            <p className="text-xs text-slate-400">Pro Max Edition</p>
+          </div>
+        </div>
+        {view === 'drafter' && (
+          <button onClick={() => setView('home')} className="flex items-center gap-2 text-sm text-slate-300 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Main Menu
+          </button>
+        )}
+      </header>
+
+      {/* Body */}
+      <div className="flex-1 overflow-y-auto">
+        {view === 'home' ? <HomeScreen /> : (
+          /* DRAFTER VIEW */
+          <div className="flex flex-col lg:flex-row h-full">
+            
+            {/* Sidebar */}
+            <div className="w-full lg:w-1/3 bg-white border-r border-slate-200 p-6 overflow-y-auto shadow-lg z-10">
+              <div className="mb-6 pb-4 border-b border-slate-100">
+                <h2 className="text-2xl font-bold text-slate-800">{TEMPLATES[selectedTemplateId].name}</h2>
+              </div>
+
+              {/* Language Toggle */}
+              <div clas
