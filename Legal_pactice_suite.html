@@ -112,6 +112,429 @@ const TEMPLATES = {
     }
   },
 
+  // ── SUIT FOR POSSESSION ──────────────────────────────────────────────────
+  suit_possession: {
+    id: 'suit_possession',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Possession (S. 8 SRA)',
+    desc: 'Recovery of immovable property under Specific Relief Act.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name & S/o / D/o', type: 'text' },
+          { key: 'plaintiff_cnic', label: 'Plaintiff CNIC', type: 'text' },
+          { key: 'defendant', label: 'Defendant Name & S/o', type: 'text' },
+          { key: 'property', label: 'Property Description (Khasra/Khata)', type: 'text' },
+          { key: 'area', label: 'Area (Marlas/Kanals)', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'cause', label: 'Cause of Dispossession', type: 'text' }
+        ],
+        checklist: ['Fard Malkiat (Ownership Record)', 'Aks Shajra (Map)', 'Mutation Copy', 'Vakalatnama', 'Court Fee (Ad Valorem)'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE / CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}, CNIC No. ${d.plaintiff_cnic || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n            SUIT FOR POSSESSION UNDER SECTION 8 OF THE\n           SPECIFIC RELIEF ACT, 1877 READ WITH ORDER VII CPC\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff is the lawful and rightful owner of the property measuring ${d.area || '______'}, bearing Khasra/Khata No. ${d.property || '______'}, situated in Tehsil/District ${d.tehsil || '______'}, as evidenced by the revenue record duly maintained by the Revenue Department.\n\n2.   That the Plaintiff has been in continuous, peaceful and open possession of the suit property as its owner and has been paying all Government dues and land revenues.\n\n3.   That ${d.cause || 'the Defendant, in a clandestine and illegal manner, dispossessed the Plaintiff from the suit property without any lawful authority or justification'}.\n\n4.   That the Defendant has no right, title or interest whatsoever in the suit property and his possession, if any, is unlawful, illegal and without any legal sanction.\n\n5.   That the cause of action arose when the Defendant wrongfully dispossessed the Plaintiff, which is within the limitation period prescribed by the Limitation Act, 1908.\n\n6.   That the suit is valued for the purposes of court fee and jurisdiction at the value of the property as per the Collector's rate.\n\n                                       PRAYER\n\nIn view of the above facts and circumstances, it is most respectfully prayed that this Honourable Court may graciously be pleased to:\n\n(i)   Pass a decree for possession of the suit property described above in favour of the Plaintiff and against the Defendant;\n\n(ii)  Award mesne profits from the date of dispossession till the actual delivery of possession;\n\n(iii) Award costs of the suit to the Plaintiff;\n\n(iv)  Grant any other relief that this Honourable Court may deem fit and proper in the circumstances of the case.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی (نام، ولدیت)', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ (نام، ولدیت)', type: 'text' },
+          { key: 'property', label: 'خسرہ / خاطہ نمبر', type: 'text' },
+          { key: 'area', label: 'رقبہ (مرلہ/کنال)', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' }
+        ],
+        checklist: ['فرد ملکیت', 'عکس شجرہ', 'نقل انتقال', 'وکالت نامہ', 'کورٹ فیس'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج / سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ قبضہ بموجب دفعہ ۸ قانون ریلیف ایکٹ ۱۸۷۷\n\nجناب عالی!\n\n۱. یہ کہ مدعی رقبہ ${d.area || '______'} خسرہ / خاطہ نمبر ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} کا قانونی اور حق دار مالک ہے جیسا کہ محکمہ مال کے ریکارڈ سے ثابت ہے۔\n\n۲. یہ کہ مدعی مذکورہ جائیداد پر بطور مالک مسلسل، پُرامن اور علانیہ قابض ہے اور تمام سرکاری واجبات ادا کرتا رہا ہے۔\n\n۳. یہ کہ مدعاعلیہ نے غیر قانونی طریقہ سے مدعی کو جائیداد سے بے دخل کر دیا ہے حالانکہ مدعاعلیہ کا اس جائیداد میں کوئی حق و مفاد نہیں ہے۔\n\n۴. یہ کہ مدعاعلیہ کا قبضہ غیر قانونی، خلاف قانون اور بلا اختیار ہے۔\n\n۵. یہ کہ مقدمہ ہذا میعاد قانونی کے اندر دائر کیا جا رہا ہے۔\n\nاستدعا:\n\n(الف) مدعی کے حق میں بضد مدعاعلیہ ڈگری قبضہ جائیداد صادر فرمائی جائے۔\n(ب) تاریخ بے قبضگی سے بازیابی قبضہ تک منافع بھی دلوائے جائیں۔\n(ج) اخراجات دعویٰ مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT FOR DECLARATION ─────────────────────────────────────────────────
+  suit_declaration: {
+    id: 'suit_declaration',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Declaration (S. 42 SRA)',
+    desc: 'Declaration of title/ownership of immovable property.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name & S/o', type: 'text' },
+          { key: 'plaintiff_cnic', label: 'Plaintiff CNIC', type: 'text' },
+          { key: 'defendant', label: 'Defendant Name & S/o', type: 'text' },
+          { key: 'property', label: 'Property (Khasra/Khata No.)', type: 'text' },
+          { key: 'area', label: 'Area', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'basis', label: 'Basis of Title (Sale/Inheritance etc.)', type: 'text' }
+        ],
+        checklist: ['Fard Malkiat', 'Sale Deed / Inheritance Documents', 'Aks Shajra', 'Mutation Copy', 'Vakalatnama', 'Court Fee Rs. 15/-'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}, CNIC No. ${d.plaintiff_cnic || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n     SUIT FOR DECLARATION UNDER SECTION 42 OF THE SPECIFIC RELIEF\n     ACT, 1877 READ WITH SECTION 9 OF THE SPECIFIC RELIEF ACT, 1877\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff is the lawful, rightful and absolute owner of the property measuring ${d.area || '______'}, bearing Khasra/Khata No. ${d.property || '______'}, situated in Tehsil/District ${d.tehsil || '______'}, by virtue of ${d.basis || '______'}.\n\n2.   That the Plaintiff's name duly appears in the revenue record as the owner of the suit property and he has been in peaceful possession thereof.\n\n3.   That the Defendant is claiming adverse interest in the suit property without any legal basis, right or authority, which is causing cloud on the title of the Plaintiff.\n\n4.   That the Defendant has been making false and frivolous claims over the suit property with the malafide intention to deprive the Plaintiff of his legitimate rights.\n\n5.   That under Section 42 of the Specific Relief Act, 1877, any person entitled to any legal character, or to any right as to property, may institute a suit against any person denying, or interested to deny, his title to such character or right.\n\n6.   That the cause of action accrued when the Defendant started making illegal claims over the suit property, which is within limitation.\n\n7.   That the court fee of Rs. 15/- has been affixed as fixed fee on a declaratory suit.\n\n                                       PRAYER\n\nIt is most respectfully prayed that this Honourable Court may be pleased to:\n\n(i)   Pass a decree declaring that the Plaintiff is the lawful and rightful owner of the suit property bearing Khasra/Khata No. ${d.property || '______'} and the Defendant has no right, title or interest therein;\n\n(ii)  Pass a consequential decree for permanent injunction restraining the Defendant from interfering with the Plaintiff's peaceful possession;\n\n(iii) Award costs of the suit;\n\n(iv)  Grant any other relief as deemed fit and just.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی (نام، ولدیت)', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ (نام، ولدیت)', type: 'text' },
+          { key: 'property', label: 'خسرہ / خاطہ نمبر', type: 'text' },
+          { key: 'area', label: 'رقبہ', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' },
+          { key: 'basis', label: 'بنیاد ملکیت (فروخت / وراثت)', type: 'text' }
+        ],
+        checklist: ['فرد ملکیت', 'دستاویز ملکیت', 'عکس شجرہ', 'نقل انتقال', 'وکالت نامہ', 'کورٹ فیس ۱۵ روپے'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ اعلانِ حق بموجب دفعہ ۴۲ ریلیف ایکٹ ۱۸۷۷\n\nجناب عالی!\n\n۱. یہ کہ مدعی رقبہ ${d.area || '______'} خسرہ / خاطہ نمبر ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} کا بموجب ${d.basis || '______'} قانونی، حق دار اور مکمل مالک ہے۔\n\n۲. یہ کہ مدعی کا نام محکمہ مال کے ریکارڈ میں بطور مالک درج ہے اور وہ پُرامن قابض ہے۔\n\n۳. یہ کہ مدعاعلیہ جائیداد مذکورہ پر بلا کسی قانونی بنیاد کے دعویٰ کر رہا ہے جس سے مدعی کے حق پر آنچ آ رہی ہے۔\n\n۴. یہ کہ دفعہ ۴۲ ریلیف ایکٹ کے تحت مدعی کو اعلانِ حق کا دعویٰ دائر کرنے کا حق حاصل ہے۔\n\n۵. یہ کہ مقدمہ ہذا میعاد قانونی کے اندر دائر کیا جا رہا ہے اور کورٹ فیس ۱۵ روپے منسلک ہے۔\n\nاستدعا:\n\n(الف) یہ اعلان فرمایا جائے کہ مدعی جائیداد مذکورہ کا قانونی مالک ہے اور مدعاعلیہ کا اس میں کوئی حق نہیں ہے۔\n(ب) مدعی کے قبضہ میں مداخلت سے مدعاعلیہ کو بذریعہ حکم امتناعی روکا جائے۔\n(ج) اخراجات دعویٰ مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT FOR PERMANENT INJUNCTION ────────────────────────────────────────
+  suit_injunction: {
+    id: 'suit_injunction',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Permanent Injunction (S. 54 SRA)',
+    desc: 'Restrain illegal construction, trespass or interference.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name & S/o', type: 'text' },
+          { key: 'defendant', label: 'Defendant Name & S/o', type: 'text' },
+          { key: 'property', label: 'Property Description', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'act', label: 'Threatened/Committed Act by Defendant', type: 'text' }
+        ],
+        checklist: ['Fard Malkiat', 'Photographs of Property', 'Vakalatnama', 'Court Fee Rs. 15/-', 'Affidavit for Ad-interim Injunction'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n     SUIT FOR PERMANENT INJUNCTION UNDER SECTION 54 OF THE\n     SPECIFIC RELIEF ACT, 1877\n\n     WITH APPLICATION FOR AD-INTERIM INJUNCTION UNDER ORDER XXXIX\n     RULES 1 & 2 CPC\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff is the lawful owner and possessor of the property described as ${d.property || '______'}, situated in Tehsil/District ${d.tehsil || '______'}, as is duly evidenced by the revenue and ownership record.\n\n2.   That the Plaintiff has been in continuous, peaceful and undisturbed possession of the suit property and has been enjoying its fruits and benefits.\n\n3.   That the Defendant has ${d.act || 'threatened to illegally dispossess the Plaintiff and has started encroaching upon the suit property without any lawful authority'}, which is causing irreparable loss to the Plaintiff.\n\n4.   That the aforesaid act of the Defendant is illegal, unlawful and without any justification and is in violation of the Plaintiff's civil rights.\n\n5.   That the Defendant's acts, if not restrained, will cause irreparable injury to the Plaintiff for which no adequate remedy exists at law except a permanent injunction.\n\n6.   That the balance of convenience clearly lies in favour of the Plaintiff and against the Defendant.\n\n7.   That the suit is valued at Rs. 15/- for court fee purposes, being a declaratory and injunctive relief suit.\n\n                           APPLICATION FOR AD-INTERIM INJUNCTION\n\nUnder Order XXXIX Rules 1 & 2 CPC, the Plaintiff most humbly prays that pending the decision of the main suit, an ex-parte ad-interim injunction may be granted restraining the Defendant from interfering with the Plaintiff's possession or carrying out any construction/demolition on the suit property.\n\n                                       PRAYER\n\n(i)   A decree for permanent injunction be passed restraining the Defendant, his servants, agents and all persons claiming through him from interfering with the Plaintiff's possession and enjoyment of the suit property;\n\n(ii)  Ad-interim injunction be granted during the pendency of the suit;\n\n(iii) Costs of the suit be awarded;\n\n(iv)  Any other relief deemed just and equitable be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی (نام، ولدیت)', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ (نام، ولدیت)', type: 'text' },
+          { key: 'property', label: 'تفصیل جائیداد', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' },
+          { key: 'act', label: 'مدعاعلیہ کی زیادتی', type: 'text' }
+        ],
+        checklist: ['فرد ملکیت', 'تصاویر جائیداد', 'وکالت نامہ', 'کورٹ فیس ۱۵ روپے', 'بیان حلفی برائے عبوری حکم امتناعی'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ حکم امتناعی مستقل بموجب دفعہ ۵۴ ریلیف ایکٹ ۱۸۷۷\nبمعہ درخواست عبوری حکم امتناعی بموجب آرڈر ۳۹ قاعدہ ۱ و ۲ ضابطہ دیوانی\n\nجناب عالی!\n\n۱. یہ کہ مدعی جائیداد مذکورہ ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} کا قانونی مالک اور قابض ہے۔\n\n۲. یہ کہ مدعی اس جائیداد پر مسلسل، پُرامن اور بلا روک ٹوک قابض ہے۔\n\n۳. یہ کہ مدعاعلیہ نے ${d.act || 'مدعی کو بے دخل کرنے کی دھمکی دی ہے اور جائیداد پر ناجائز قبضہ کرنا شروع کر دیا ہے'} جس سے مدعی کو ناقابلِ تلافی نقصان پہنچ رہا ہے۔\n\n۴. یہ کہ مدعاعلیہ کی حرکات غیر قانونی اور بلا جواز ہیں۔\n\n۵. یہ کہ اگر مدعاعلیہ کو نہ روکا گیا تو مدعی کو ایسا نقصان پہنچے گا جس کا کوئی ازالہ ممکن نہ ہوگا۔\n\nاستدعا:\n\n(الف) مدعی کے حق میں بضد مدعاعلیہ حکم امتناعی مستقل صادر فرمایا جائے۔\n(ب) دورانِ سماعت عبوری حکم امتناعی عطا فرمایا جائے۔\n(ج) اخراجات دعویٰ مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT FOR PARTITION ───────────────────────────────────────────────────
+  suit_partition: {
+    id: 'suit_partition',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Partition (Partition Act 1893)',
+    desc: 'Division of jointly owned property among co-sharers.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name & S/o', type: 'text' },
+          { key: 'plaintiff_share', label: 'Plaintiff\'s Share (e.g. 1/4)', type: 'text' },
+          { key: 'defendant', label: 'Co-sharer / Defendant(s)', type: 'text' },
+          { key: 'property', label: 'Property (Khasra/Khata No.)', type: 'text' },
+          { key: 'area', label: 'Total Area', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'origin', label: 'Origin of Co-ownership (Inheritance/Purchase)', type: 'text' }
+        ],
+        checklist: ['Fard Malkiat showing all co-sharers', 'Family Tree (Shajra Nasab)', 'Aks Shajra', 'Death Certificate (if inheritance)', 'Court Fee (Ad Valorem on share value)', 'Vakalatnama'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n            SUIT FOR PARTITION UNDER THE PARTITION ACT, 1893\n             READ WITH ORDER XX RULE 18 CPC\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff is a co-sharer to the extent of ${d.plaintiff_share || '______'} share in the property measuring ${d.area || '______'} bearing Khasra/Khata No. ${d.property || '______'}, situated in Tehsil/District ${d.tehsil || '______'}, by virtue of ${d.origin || '______'}.\n\n2.   That the Defendant(s) are also co-sharers in the aforesaid property and their shares are reflected in the revenue record.\n\n3.   That the said property is jointly owned and is presently in joint possession of the co-sharers. The Plaintiff now desires to have his/her separate share demarcated and allotted to him/her in exclusive ownership and possession.\n\n4.   That despite repeated requests and demands, the Defendant(s) have refused and failed to effect partition of the suit property, leaving the Plaintiff with no option but to file this suit.\n\n5.   That under the Partition Act, 1893, any co-owner of immovable property is entitled to file a suit for partition and separate possession of his/her undivided share.\n\n6.   That the suit is within the prescribed period of limitation.\n\n7.   That the court fee has been paid on the value of the Plaintiff's share as per the Collector's rate.\n\n                                       PRAYER\n\n(i)   A decree for partition be passed and the Plaintiff's share of ${d.plaintiff_share || '______'} in the suit property be demarcated and allotted to the Plaintiff by metes and bounds;\n\n(ii)  In case physical partition is not possible, a decree for sale of the property and distribution of the sale proceeds be passed proportionate to the respective shares;\n\n(iii) Costs of the suit be awarded to the Plaintiff;\n\n(iv)  Any other relief as deemed fit be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی (نام، ولدیت)', type: 'text' },
+          { key: 'plaintiff_share', label: 'حصہ مدعی (مثلاً ۱/۴)', type: 'text' },
+          { key: 'defendant', label: 'مشترکہ حصہ دار / مدعاعلیہ', type: 'text' },
+          { key: 'property', label: 'خسرہ / خاطہ نمبر', type: 'text' },
+          { key: 'area', label: 'کل رقبہ', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' }
+        ],
+        checklist: ['فرد ملکیت (تمام حصہ داران)', 'شجرہ نسب', 'عکس شجرہ', 'سرٹیفکیٹ وفات (اگر وراثت)', 'کورٹ فیس', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ تقسیم جائیداد بموجب ایکٹ تقسیم ۱۸۹۳\n\nجناب عالی!\n\n۱. یہ کہ مدعی رقبہ ${d.area || '______'} خسرہ / خاطہ نمبر ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} میں ${d.plaintiff_share || '______'} حصے کا شریک ہے۔\n\n۲. یہ کہ مدعاعلیہ بھی مذکورہ جائیداد میں شریک ہے اور ان کے حصے ریکارڈ مال میں موجود ہیں۔\n\n۳. یہ کہ مدعی اپنا حصہ علیحدہ کرانا چاہتا ہے لیکن مدعاعلیہ تقسیم پر آمادہ نہیں ہے۔\n\n۴. یہ کہ ایکٹ تقسیم ۱۸۹۳ کے تحت ہر شریک کو اپنا حصہ علیحدہ کرانے کا حق ہے۔\n\n۵. یہ کہ مقدمہ ہذا میعاد قانونی کے اندر اور کورٹ فیس ادا کر کے دائر کیا جا رہا ہے۔\n\nاستدعا:\n\n(الف) ڈگری تقسیم صادر کی جائے اور مدعی کا حصہ ${d.plaintiff_share || '______'} حد بندی کر کے قبضہ دلایا جائے۔\n(ب) اگر فیزیکل تقسیم ممکن نہ ہو تو جائیداد کی بیع کر کے رقم تناسب حصص تقسیم کی جائے۔\n(ج) اخراجات مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT FOR SPECIFIC PERFORMANCE ────────────────────────────────────────
+  suit_specific_perf: {
+    id: 'suit_specific_perf',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Specific Performance (S. 12 SRA)',
+    desc: 'Enforcement of agreement to sell immovable property.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff (Purchaser) Name', type: 'text' },
+          { key: 'defendant', label: 'Defendant (Vendor) Name', type: 'text' },
+          { key: 'property', label: 'Property (Khasra/Khata No.)', type: 'text' },
+          { key: 'area', label: 'Area', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'total_price', label: 'Agreed Sale Price (PKR)', type: 'text' },
+          { key: 'advance', label: 'Advance/Bayana Paid (PKR)', type: 'text' },
+          { key: 'agreement_date', label: 'Date of Agreement to Sell', type: 'text' }
+        ],
+        checklist: ['Original Agreement to Sell (Baiyana Nama)', 'Payment Receipts', 'Fard Malkiat', 'Witnesses\' CNICs', 'Court Fee (Ad Valorem on balance price)', 'Vakalatnama'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n     SUIT FOR SPECIFIC PERFORMANCE OF AGREEMENT TO SELL\n     UNDER SECTION 12 OF THE SPECIFIC RELIEF ACT, 1877\n\nRespectfully Sheweth:\n\n1.   That the Defendant is the owner of property measuring ${d.area || '______'}, bearing Khasra/Khata No. ${d.property || '______'}, situated in Tehsil/District ${d.tehsil || '______'}.\n\n2.   That on ${d.agreement_date || '______'}, the Plaintiff and Defendant entered into an Agreement to Sell (Baiyana Nama) whereby the Defendant agreed to sell the aforesaid property to the Plaintiff for a total sale consideration of Rs. ${d.total_price || '______'}.\n\n3.   That in pursuance of the said Agreement, the Plaintiff paid a sum of Rs. ${d.advance || '______'} as advance (Bayana) to the Defendant, who duly acknowledged the receipt thereof.\n\n4.   That the Plaintiff has always been and still is ready, willing and able to perform his part of the contract by paying the remaining balance of the sale price and is ready to complete the transaction.\n\n5.   That despite the Plaintiff's readiness and willingness, the Defendant is unlawfully refusing to execute the sale deed (Iqrarnama/Bainame) in favour of the Plaintiff, thereby committing breach of the Agreement to Sell.\n\n6.   That the Plaintiff's readiness and willingness to perform is genuine and the Plaintiff has sufficient funds to pay the balance consideration.\n\n7.   That under Section 12 of the Specific Relief Act, 1877, the Plaintiff is entitled to the specific performance of the Agreement to Sell as the property is unique and compensation in money is not an adequate remedy.\n\n8.   That the suit is within the prescribed period of limitation of three years from the date of refusal.\n\n                                       PRAYER\n\n(i)   A decree for specific performance of the Agreement to Sell dated ${d.agreement_date || '______'} be passed, directing the Defendant to execute and register the sale deed in favour of the Plaintiff upon payment of the balance consideration;\n\n(ii)  In the alternative, if specific performance is not decreed, a decree for the refund of Rs. ${d.advance || '______'} along with damages be passed;\n\n(iii) Costs of the suit be awarded;\n\n(iv)  Any other relief deemed just be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی (خریدار) نام', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ (بیچنے والا) نام', type: 'text' },
+          { key: 'property', label: 'خسرہ / خاطہ نمبر', type: 'text' },
+          { key: 'area', label: 'رقبہ', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' },
+          { key: 'total_price', label: 'کل طے شدہ قیمت (روپے)', type: 'text' },
+          { key: 'advance', label: 'ادا شدہ بیعانہ (روپے)', type: 'text' },
+          { key: 'agreement_date', label: 'تاریخ بیعانہ نامہ', type: 'text' }
+        ],
+        checklist: ['اصل بیعانہ نامہ', 'رسیدات ادائیگی', 'فرد ملکیت', 'شناختی کارڈ گواہان', 'کورٹ فیس', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ تکمیل معاہدہ فروخت بموجب دفعہ ۱۲ ریلیف ایکٹ ۱۸۷۷\n\nجناب عالی!\n\n۱. یہ کہ مدعاعلیہ رقبہ ${d.area || '______'} خسرہ / خاطہ نمبر ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} کا مالک ہے۔\n\n۲. یہ کہ بتاریخ ${d.agreement_date || '______'} مدعی اور مدعاعلیہ کے درمیان بیعانہ نامہ طے پایا جس کے تحت مدعاعلیہ نے مذکورہ جائیداد بمبلغ ${d.total_price || '______'} روپے میں فروخت کرنا طے کیا۔\n\n۳. یہ کہ مدعی نے مبلغ ${d.advance || '______'} روپے بطور بیعانہ ادا کیے جس کی رسید مدعاعلیہ نے دی۔\n\n۴. یہ کہ مدعی باقی رقم ادا کر کے بیع نامہ کرانے کو ہمہ وقت تیار ہے لیکن مدعاعلیہ انکاری ہے۔\n\n۵. یہ کہ دفعہ ۱۲ ریلیف ایکٹ کے تحت مدعی تکمیل معاہدہ کا حق دار ہے کیونکہ یہ جائیداد منفرد ہے اور تاوان ناکافی علاج ہے۔\n\n۶. یہ کہ مقدمہ ہذا میعاد قانونی کے اندر دائر کیا جا رہا ہے۔\n\nاستدعا:\n\n(الف) ڈگری تکمیل معاہدہ فروخت صادر کی جائے اور مدعاعلیہ کو بیع نامہ رجسٹرڈ کرنے کا حکم دیا جائے۔\n(ب) بصورت دیگر بیعانہ ${d.advance || '______'} روپے واپس دلوانے کی ڈگری صادر کی جائے۔\n(ج) اخراجات مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT FOR DAMAGES ─────────────────────────────────────────────────────
+  suit_damages: {
+    id: 'suit_damages',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Damages (Breach of Contract)',
+    desc: 'Compensation for loss due to breach of contract or tort.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name', type: 'text' },
+          { key: 'defendant', label: 'Defendant Name', type: 'text' },
+          { key: 'contract_desc', label: 'Nature of Contract/Obligation', type: 'text' },
+          { key: 'contract_date', label: 'Date of Contract', type: 'text' },
+          { key: 'breach_desc', label: 'How Defendant Breached', type: 'text' },
+          { key: 'loss', label: 'Loss/Damages Claimed (PKR)', type: 'text' }
+        ],
+        checklist: ['Copy of Contract/Agreement', 'Legal Notice + Acknowledgement', 'Evidence of Loss/Invoices', 'Court Fee (Ad Valorem)', 'Vakalatnama'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n     SUIT FOR RECOVERY OF DAMAGES UNDER THE CONTRACT ACT, 1872\n     (SECTIONS 73 & 74) READ WITH THE SPECIFIC RELIEF ACT, 1877\n\nRespectfully Sheweth:\n\n1.   That on ${d.contract_date || '______'}, the Plaintiff and the Defendant entered into a contract whereby ${d.contract_desc || '______'}. The said contract was duly executed and the Plaintiff duly performed his obligations thereunder.\n\n2.   That the Defendant unlawfully and in breach of the aforesaid contract ${d.breach_desc || 'failed to perform his contractual obligations despite the Plaintiff\'s repeated requests and reminders'}.\n\n3.   That due to the Defendant's breach of contract, the Plaintiff has suffered actual, direct and proximate losses and damages amounting to Rs. ${d.loss || '______'}, the details whereof are as under:\n     (a) Direct loss due to breach:      Rs. ____________\n     (b) Consequential loss:             Rs. ____________\n     (c) Loss of profit/opportunity:     Rs. ____________\n\n4.   That a legal notice was duly sent to the Defendant calling upon him to remedy the breach and pay the damages, but the Defendant failed to respond and remedy the breach.\n\n5.   That under Sections 73 and 74 of the Contract Act, 1872, the Plaintiff is entitled to recover from the Defendant compensation for the losses naturally arising from the breach of contract.\n\n6.   That the suit is within the prescribed period of limitation of three years from the date of breach.\n\n                                       PRAYER\n\n(i)   A decree for Rs. ${d.loss || '______'} be passed in favour of the Plaintiff and against the Defendant as damages for breach of contract;\n\n(ii)  Mark-up/interest at the rate of 12% per annum on the decreetal amount from the date of filing of suit till realization;\n\n(iii) Costs of the suit be awarded;\n\n(iv)  Any other or further relief as deemed fit be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی نام', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ نام', type: 'text' },
+          { key: 'contract_desc', label: 'معاہدے کی نوعیت', type: 'text' },
+          { key: 'contract_date', label: 'تاریخ معاہدہ', type: 'text' },
+          { key: 'loss', label: 'نقصان / تاوان کی رقم (روپے)', type: 'text' }
+        ],
+        checklist: ['نقل معاہدہ', 'لیگل نوٹس + تصدیق', 'ثبوت نقصان', 'کورٹ فیس', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ تاوان بموجب دفعات ۷۳ و ۷۴ قانون معاہدات ۱۸۷۲\n\nجناب عالی!\n\n۱. یہ کہ بتاریخ ${d.contract_date || '______'} مدعی اور مدعاعلیہ کے درمیان معاہدہ ہوا جس کے تحت ${d.contract_desc || '______'}۔ مدعی نے اپنی ذمہ داریاں پوری کیں۔\n\n۲. یہ کہ مدعاعلیہ نے معاہدہ کی خلاف ورزی کی اور اپنی ذمہ داریاں پوری نہیں کیں جس سے مدعی کو مبلغ ${d.loss || '______'} روپے کا نقصان ہوا۔\n\n۳. یہ کہ قانونی نوٹس کے باوجود مدعاعلیہ نے نقصان پورا نہیں کیا۔\n\n۴. یہ کہ دفعات ۷۳ و ۷۴ قانون معاہدات کے تحت مدعی تاوان وصول کرنے کا حق دار ہے۔\n\n۵. یہ کہ مقدمہ میعاد قانونی کے اندر دائر ہے۔\n\nاستدعا:\n\n(الف) مدعاعلیہ کے خلاف مبلغ ${d.loss || '______'} روپے کی ڈگری تاوان صادر کی جائے۔\n(ب) تاریخ دائری مقدمہ سے وصولی تک ۱۲ فیصد سالانہ مارک اَپ بھی دلوایا جائے۔\n(ج) اخراجات مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT AGAINST ILLEGAL MUTATION ────────────────────────────────────────
+  suit_mutation: {
+    id: 'suit_mutation',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit Against Illegal Mutation',
+    desc: 'Challenge fraudulent/illegal entry in revenue record (Intiqal).',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name & S/o', type: 'text' },
+          { key: 'defendant', label: 'Defendant Name & S/o', type: 'text' },
+          { key: 'mutation_no', label: 'Mutation No. (Intiqal No.)', type: 'text' },
+          { key: 'mutation_date', label: 'Date of Mutation', type: 'text' },
+          { key: 'property', label: 'Property (Khasra/Khata No.)', type: 'text' },
+          { key: 'area', label: 'Area', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'fraud', label: 'Nature of Fraud/Illegality', type: 'text' }
+        ],
+        checklist: ['Fard Malkiat (before & after mutation)', 'Copy of Impugned Mutation', 'Aks Shajra', 'Original Ownership Documents', 'Court Fee Rs. 15/-', 'Vakalatnama'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'} and\nMUTATION SANCTIONING OFFICER (if necessary party)\n                                                           (DEFENDANTS)\n\n     SUIT FOR CANCELLATION OF MUTATION / DECLARATION AND POSSESSION\n     UNDER SECTIONS 42 & 8 SPECIFIC RELIEF ACT, 1877\n     AND SECTION 161 WEST PAKISTAN LAND REVENUE ACT, 1967\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff is the rightful owner of property measuring ${d.area || '______'} bearing Khasra/Khata No. ${d.property || '______'}, Tehsil/District ${d.tehsil || '______'}, as reflected in the pre-mutation revenue record.\n\n2.   That on ${d.mutation_date || '______'}, Mutation No. ${d.mutation_no || '______'} was fraudulently and illegally sanctioned in favour of the Defendant on the basis of ${d.fraud || 'forged and fabricated documents/misrepresentation, without the Plaintiff\'s knowledge, consent or presence'}.\n\n3.   That the aforesaid mutation is void ab initio as it was obtained through fraud, misrepresentation, forgery and without lawful authority. The Plaintiff never appeared before the Revenue Officer nor executed any document in favour of the Defendant.\n\n4.   That the impugned mutation confers no legal title upon the Defendant, as a mutation is merely a fiscal record and does not create or extinguish title. The Defendant cannot derive better title than what the mutation grantor possessed.\n\n5.   That the Plaintiff came to know about the illegal mutation only recently and the suit is within the period of limitation as the Plaintiff was not a party to the mutation proceedings.\n\n6.   That court fee of Rs. 15/- has been affixed, this being a suit for declaration.\n\n                                       PRAYER\n\n(i)   A decree declaring Mutation No. ${d.mutation_no || '______'} dated ${d.mutation_date || '______'} as void, illegal and of no legal effect be passed;\n\n(ii)  A consequential decree for possession of the suit property be passed;\n\n(iii) A permanent injunction be granted restraining the Defendant from interfering with the Plaintiff's rights;\n\n(iv)  Costs of the suit be awarded to the Plaintiff;\n\n(v)   Any other relief deemed just be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی (نام، ولدیت)', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ (نام، ولدیت)', type: 'text' },
+          { key: 'mutation_no', label: 'انتقال نمبر', type: 'text' },
+          { key: 'mutation_date', label: 'تاریخ انتقال', type: 'text' },
+          { key: 'property', label: 'خسرہ / خاطہ نمبر', type: 'text' },
+          { key: 'area', label: 'رقبہ', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' }
+        ],
+        checklist: ['فرد ملکیت (انتقال سے قبل و بعد)', 'نقل انتقال متنازعہ', 'عکس شجرہ', 'اصل دستاویزات ملکیت', 'کورٹ فیس ۱۵ روپے', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ اعلانِ حق / منسوخی انتقال بموجب دفعات ۴۲ و ۸ ریلیف ایکٹ ۱۸۷۷\nبموجب دفعہ ۱۶۱ قانون مالیات ۱۹۶۷\n\nجناب عالی!\n\n۱. یہ کہ مدعی رقبہ ${d.area || '______'} خسرہ / خاطہ نمبر ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} کا قانونی مالک ہے جیسا کہ ریکارڈ مال سے ثابت ہے۔\n\n۲. یہ کہ مدعاعلیہ نے بتاریخ ${d.mutation_date || '______'} انتقال نمبر ${d.mutation_no || '______'} جعل سازی اور دھوکہ دہی کے ذریعے اپنے نام منتقل کرایا ہے حالانکہ مدعی نے کوئی دستخط نہیں کیے نہ مالگزاری کے سامنے پیش ہوا۔\n\n۳. یہ کہ انتقال مذکورہ شروع سے باطل ہے کیونکہ یہ جعلسازی اور بے اختیاری سے درج ہوا ہے۔\n\n۴. یہ کہ انتقال محض مالیاتی اندراج ہے جو ملکیت پیدا یا ختم نہیں کرتا۔\n\n۵. یہ کہ مقدمہ ہذا میعاد قانونی کے اندر اور کورٹ فیس ۱۵ روپے منسلک کر کے دائر کیا جا رہا ہے۔\n\nاستدعا:\n\n(الف) انتقال نمبر ${d.mutation_no || '______'} بتاریخ ${d.mutation_date || '______'} کو کالعدم قرار دیا جائے۔\n(ب) جائیداد کا قبضہ مدعی کو دلوایا جائے۔\n(ج) مدعاعلیہ کو حکم امتناعی کے ذریعے روکا جائے۔\n(د) اخراجات مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── EJECTMENT SUIT ───────────────────────────────────────────────────────
+  suit_ejectment: {
+    id: 'suit_ejectment',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Ejectment Suit (Rent Restriction)',
+    desc: 'Eviction of tenant under Rent Restriction Ordinance.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Rent Controller Court', type: 'text' },
+          { key: 'landlord', label: 'Landlord/Petitioner Name', type: 'text' },
+          { key: 'tenant', label: 'Tenant/Respondent Name', type: 'text' },
+          { key: 'property', label: 'Rented Premises Address', type: 'text' },
+          { key: 'rent', label: 'Monthly Rent (PKR)', type: 'text' },
+          { key: 'rent_due', label: 'Arrears of Rent (PKR)', type: 'text' },
+          { key: 'ground', label: 'Ground for Ejectment', type: 'text' }
+        ],
+        checklist: ['Rent Agreement / Rent Deed', 'Rent Receipts (or proof of non-payment)', 'Legal Notice to Tenant', 'Ownership Documents', 'Vakalatnama'],
+        generate: (d) => `BEFORE THE RENT CONTROLLER / COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nRent Case No. _____ / ${new Date().getFullYear()}\n\n${d.landlord || '______'}\n                                                            (LANDLORD/PETITIONER)\n\n                              VERSUS\n\n${d.tenant || '______'}\n                                                           (TENANT/RESPONDENT)\n\n     PETITION/PLAINT FOR EJECTMENT OF TENANT\n     UNDER THE WEST PAKISTAN URBAN RENT RESTRICTION ORDINANCE, 1959\n     (OR APPLICABLE PROVINCIAL RENT RESTRICTION LAW)\n\nRespectfully Sheweth:\n\n1.   That the Petitioner is the lawful owner of the rented premises situated at ${d.property || '______'} (hereinafter referred to as "the Premises").\n\n2.   That the Respondent/Tenant is in occupation of the aforesaid Premises under a tenancy agreement at a monthly rent of Rs. ${d.rent || '______'}.\n\n3.   That ${d.ground || 'the Tenant has defaulted in payment of rent and arrears of rent amounting to Rs. ' + (d.rent_due || '______') + ' have accrued, despite repeated demands and a legal notice duly served upon the Tenant'}.\n\n4.   That the Petitioner also requires the premises for his personal use and occupation / bona fide need as the Petitioner has no other residential/commercial accommodation.\n\n5.   That a legal notice was duly served upon the Respondent calling upon him to vacate the premises and pay the arrears of rent, but the Respondent failed to comply.\n\n6.   That under the Rent Restriction Ordinance, 1959, the Petitioner is entitled to seek ejectment of the Tenant on the grounds of non-payment of rent and/or personal need.\n\n                                       PRAYER\n\n(i)   An order/decree for ejectment of the Respondent/Tenant from the Premises situated at ${d.property || '______'} be passed;\n\n(ii)  A decree for recovery of arrears of rent amounting to Rs. ${d.rent_due || '______'} be passed;\n\n(iii) Mesne profits from the date of filing till vacation of the premises be awarded;\n\n(iv)  Costs of the proceedings be awarded to the Petitioner;\n\n(v)   Any other relief as deemed fit be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                       LANDLORD / PETITIONER\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'رینٹ کنٹرولر کورٹ', type: 'text' },
+          { key: 'landlord', label: 'مالک مکان / درخواست گزار', type: 'text' },
+          { key: 'tenant', label: 'کرایہ دار / جواب دہ', type: 'text' },
+          { key: 'property', label: 'کرایہ کی جائیداد کا پتہ', type: 'text' },
+          { key: 'rent', label: 'ماہانہ کرایہ (روپے)', type: 'text' },
+          { key: 'rent_due', label: 'واجب الادا کرایہ (روپے)', type: 'text' },
+          { key: 'ground', label: 'بے دخلی کی وجہ', type: 'text' }
+        ],
+        checklist: ['کرایہ نامہ', 'رسیدات کرایہ', 'قانونی نوٹس', 'دستاویزات ملکیت', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'رینٹ کنٹرولر / سینئر سول جج صاحب'}\n\nکیس نمبر: ______ / ${new Date().getFullYear()}\n\n${d.landlord || '______'}\n(مالک مکان / درخواست گزار)\n\nبنام\n\n${d.tenant || '______'}\n(کرایہ دار / جواب دہ)\n\nدرخواست بے دخلی بموجب ویسٹ پاکستان اربن رینٹ ریسٹریکشن آرڈیننس ۱۹۵۹\n\nجناب عالی!\n\n۱. یہ کہ درخواست گزار جائیداد واقع ${d.property || '______'} کا قانونی مالک ہے۔\n\n۲. یہ کہ جواب دہ مذکورہ جائیداد میں ماہانہ مبلغ ${d.rent || '______'} روپے کرایہ پر قابض ہے۔\n\n۳. یہ کہ ${d.ground || 'جواب دہ نے کرایہ ادا کرنا بند کر دیا ہے اور مبلغ ' + (d.rent_due || '______') + ' روپے واجب الادا ہیں۔ قانونی نوٹس کے باوجود کرایہ ادا نہیں کیا گیا۔'}\n\n۴. یہ کہ درخواست گزار کو جائیداد کی ذاتی ضرورت بھی ہے۔\n\n۵. یہ کہ درخواست گزار قانونی نوٹس دینے کے بعد بے دخلی کی درخواست دائر کرنے کا حق دار ہے۔\n\nاستدعا:\n\n(الف) جواب دہ کو جائیداد سے بے دخل کرنے کا حکم صادر فرمایا جائے۔\n(ب) واجب الادا کرایہ ${d.rent_due || '______'} روپے دلوایا جائے۔\n(ج) اخراجات درخواست گزار کو دلوائے جائیں۔\n\nعرضے\nمالک مکان بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT FOR RENDITION OF ACCOUNTS ───────────────────────────────────────
+  suit_accounts: {
+    id: 'suit_accounts',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Rendition of Accounts',
+    desc: 'Compel partner/agent/manager to render accounts.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name', type: 'text' },
+          { key: 'defendant', label: 'Defendant Name', type: 'text' },
+          { key: 'relationship', label: 'Relationship (Partner/Agent/Manager)', type: 'text' },
+          { key: 'business', label: 'Business/Enterprise Name', type: 'text' },
+          { key: 'period', label: 'Period for Accounts', type: 'text' },
+          { key: 'amount', label: 'Approximate Amount Due (PKR)', type: 'text' }
+        ],
+        checklist: ['Partnership Deed / Agency Agreement', 'Bank Statements', 'Business Records', 'Legal Notice', 'Court Fee (Ad Valorem)', 'Vakalatnama'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n     SUIT FOR RENDITION OF ACCOUNTS AND RECOVERY OF BALANCE\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff and the Defendant entered into a relationship as ${d.relationship || '______'} in connection with the business/enterprise known as "${d.business || '______'}".\n\n2.   That under the terms of their arrangement, the Defendant was entrusted with the management and financial affairs of the said business, including collection of payments, disbursement of expenses, and maintenance of accounts.\n\n3.   That the Defendant was obligated to render true and faithful accounts of all receipts and expenditures during the period ${d.period || '______'} and to pay the balance due to the Plaintiff.\n\n4.   That despite repeated demands, the Defendant has failed and refused to render proper accounts and has not paid the Plaintiff's share of profits/balance amounts, which is approximately Rs. ${d.amount || '______'}.\n\n5.   That the Defendant's refusal to render accounts is dishonest, mala fide and in breach of the fiduciary duty owed to the Plaintiff.\n\n6.   That the Plaintiff is entitled to compel the Defendant to render a complete and accurate statement of accounts and to pay any balance found due.\n\n                                       PRAYER\n\n(i)   The Defendant be directed to render a true, complete and detailed account of all receipts, expenditures and transactions relating to the business for the period ${d.period || '______'};\n\n(ii)  Upon taking of accounts, a decree for recovery of the balance amount found due be passed in favour of the Plaintiff;\n\n(iii) In the meantime, the Defendant be restrained from dissipating or transferring any assets of the business;\n\n(iv)  Costs of the suit be awarded;\n\n(v)   Any other relief deemed just be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی نام', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ نام', type: 'text' },
+          { key: 'relationship', label: 'تعلق (شریک / ایجنٹ / منیجر)', type: 'text' },
+          { key: 'business', label: 'کاروبار / ادارے کا نام', type: 'text' },
+          { key: 'period', label: 'حسابات کی مدت', type: 'text' },
+          { key: 'amount', label: 'تخمینی واجب الادا رقم (روپے)', type: 'text' }
+        ],
+        checklist: ['شراکت نامہ / ایجنسی معاہدہ', 'بینک اسٹیٹمنٹ', 'کاروباری ریکارڈ', 'قانونی نوٹس', 'کورٹ فیس', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ پیشی حسابات و دلاپانے بقایا رقم\n\nجناب عالی!\n\n۱. یہ کہ مدعی اور مدعاعلیہ کے درمیان "${d.business || '______'}" کاروبار میں ${d.relationship || '______'} کا تعلق قائم ہوا۔\n\n۲. یہ کہ مدعاعلیہ کاروبار کے مالی امور کا ذمہ دار تھا اور اس پر فرض تھا کہ مدت ${d.period || '______'} کے حسابات پیش کرے اور بقایا رقم مدعی کو ادا کرے۔\n\n۳. یہ کہ مدعاعلیہ نے حسابات پیش کرنے اور رقم ادا کرنے سے انکار کر دیا ہے جبکہ تخمینی رقم ${d.amount || '______'} روپے واجب الادا ہے۔\n\n۴. یہ کہ مدعاعلیہ کا انکار امانت میں خیانت اور فریضہ کی خلاف ورزی ہے۔\n\nاستدعا:\n\n(الف) مدعاعلیہ کو حکم دیا جائے کہ مدت ${d.period || '______'} کے مکمل حسابات پیش کرے۔\n(ب) حسابات کے بعد واجب الادا رقم کی ڈگری صادر کی جائے۔\n(ج) مدعاعلیہ کو کاروباری اثاثے منتقل کرنے سے روکا جائے۔\n(د) اخراجات مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── PRE-EMPTION SUIT ─────────────────────────────────────────────────────
+  suit_preemption: {
+    id: 'suit_preemption',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Pre-emption Suit (Punjab Pre-emption Act 1991)',
+    desc: 'Right of first purchase by co-sharer or neighbour.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Pre-emptor (Plaintiff) Name & S/o', type: 'text' },
+          { key: 'defendant_buyer', label: 'Purchaser (Defendant-1) Name', type: 'text' },
+          { key: 'defendant_seller', label: 'Vendor (Defendant-2) Name', type: 'text' },
+          { key: 'property', label: 'Property (Khasra/Khata No.)', type: 'text' },
+          { key: 'area', label: 'Area Sold', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'sale_price', label: 'Sale Price (PKR)', type: 'text' },
+          { key: 'sale_date', label: 'Date of Sale Deed', type: 'text' },
+          { key: 'pre_emp_basis', label: 'Basis of Pre-emption (Co-sharer/Neighbour/Shafi-e-Khalit)', type: 'text' }
+        ],
+        checklist: ['Fard Malkiat showing Plaintiff\'s share', 'Copy of Sale Deed (Bainame)', 'Talab-e-Muwasibat Affidavit', 'Talab-e-Ishhad Witnesses\' Affidavits', 'Court Fee (Ad Valorem on sale price)', 'Vakalatnama', 'Deposit of Sale Price in Court'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF/PRE-EMPTOR)\n\n                              VERSUS\n\n1. ${d.defendant_buyer || '______'} (Purchaser)\n2. ${d.defendant_seller || '______'} (Vendor)\n                                                           (DEFENDANTS)\n\n          SUIT FOR PRE-EMPTION UNDER THE PUNJAB PRE-EMPTION ACT, 1991\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff is a ${d.pre_emp_basis || 'co-sharer / neighbour'} of the property measuring ${d.area || '______'} bearing Khasra/Khata No. ${d.property || '______'}, Tehsil/District ${d.tehsil || '______'}, as is evident from the revenue record.\n\n2.   That Defendant No. 2 (Vendor) sold the aforesaid property to Defendant No. 1 (Purchaser) vide Sale Deed dated ${d.sale_date || '______'} for a sale consideration of Rs. ${d.sale_price || '______'}.\n\n3.   That as soon as the Plaintiff came to know of the proposed sale, the Plaintiff immediately performed TALAB-E-MUWASIBAT (demand on the spot) and thereafter performed TALAB-E-ISHHAD (demand before witnesses) in accordance with the requirement of the Punjab Pre-emption Act, 1991.\n\n4.   That under Section 13 of the Punjab Pre-emption Act, 1991, the right of pre-emption belongs in order of priority to: (i) co-sharers in the property, (ii) partners in the tenure, and (iii) owners of adjacent land. The Plaintiff falls within the highest priority class as ${d.pre_emp_basis || '______'}.\n\n5.   That the Plaintiff is ready, willing and able to deposit the entire sale consideration of Rs. ${d.sale_price || '______'} in this Honourable Court and is hereby offering to do so.\n\n6.   That the suit is being filed within the period of one year from the date of registration of the sale deed as required by the Limitation Act.\n\n                                       PRAYER\n\n(i)   A decree for pre-emption be passed in favour of the Plaintiff, entitling the Plaintiff to purchase the suit property for a consideration of Rs. ${d.sale_price || '______'} deposited in this Court;\n\n(ii)  Defendant No. 1 be directed to hand over possession of the suit property to the Plaintiff;\n\n(iii) Costs of the suit be awarded;\n\n(iv)  Any other relief deemed fit and just be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                        PLAINTIFF / PRE-EMPTOR\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'حق شفعہ دار / مدعی', type: 'text' },
+          { key: 'defendant_buyer', label: 'خریدار / مدعاعلیہ اول', type: 'text' },
+          { key: 'defendant_seller', label: 'فروخت کنندہ / مدعاعلیہ دوئم', type: 'text' },
+          { key: 'property', label: 'خسرہ / خاطہ نمبر', type: 'text' },
+          { key: 'area', label: 'فروخت شدہ رقبہ', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' },
+          { key: 'sale_price', label: 'بیع قیمت (روپے)', type: 'text' },
+          { key: 'sale_date', label: 'تاریخ بیع نامہ', type: 'text' },
+          { key: 'pre_emp_basis', label: 'بنیاد حق شفعہ (شریک / ہمسایہ)', type: 'text' }
+        ],
+        checklist: ['فرد ملکیت', 'نقل بیع نامہ', 'بیان حلفی طلب موآصبت', 'بیان حلفی طلب اشہاد', 'کورٹ فیس', 'وکالت نامہ', 'رقم بیع عدالت میں جمع'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی / حق شفعہ دار)\n\nبنام\n\n۱. ${d.defendant_buyer || '______'} (خریدار)\n۲. ${d.defendant_seller || '______'} (فروخت کنندہ)\n(مدعاعلیہان)\n\nدعویٰ حق شفعہ بموجب پنجاب پری ایمپشن ایکٹ ۱۹۹۱\n\nجناب عالی!\n\n۱. یہ کہ مدعی رقبہ ${d.area || '______'} خسرہ / خاطہ نمبر ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} میں ${d.pre_emp_basis || 'شریک / ہمسایہ'} ہے۔\n\n۲. یہ کہ مدعاعلیہ دوئم نے مذکورہ جائیداد بتاریخ ${d.sale_date || '______'} بمبلغ ${d.sale_price || '______'} روپے مدعاعلیہ اول کو فروخت کر دی۔\n\n۳. یہ کہ مدعی نے اطلاع ملتے ہی طلب موآصبت کی اور بعد ازاں گواہان کے سامنے طلب اشہاد کی۔\n\n۴. یہ کہ پنجاب پری ایمپشن ایکٹ ۱۹۹۱ کے تحت مدعی حق شفعہ کا اعلیٰ ترین ذریعہ ${d.pre_emp_basis || '______'} کی بنیاد پر دعویٰ کا حق دار ہے۔\n\n۵. یہ کہ مدعی مبلغ ${d.sale_price || '______'} روپے عدالت میں جمع کرانے کو تیار ہے۔\n\n۶. یہ کہ مقدمہ بیع نامہ کی تاریخ سے ایک سال کی میعاد کے اندر دائر کیا جا رہا ہے۔\n\nاستدعا:\n\n(الف) مدعی کے حق میں ڈگری حق شفعہ صادر کی جائے۔\n(ب) مدعاعلیہ اول کو جائیداد کا قبضہ مدعی کو دینے کا حکم دیا جائے۔\n(ج) اخراجات مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی / حق شفعہ دار بذریعہ کونسل`
+      }
+    }
+  },
+
+  // ── SUIT FOR CANCELLATION OF INSTRUMENT ──────────────────────────────────
+  suit_cancellation: {
+    id: 'suit_cancellation',
+    category: 'Civil',
+    type: 'Suit',
+    name: 'Suit for Cancellation of Instrument (S. 39 SRA)',
+    desc: 'Cancellation of forged sale deed, gift deed or false document.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'plaintiff', label: 'Plaintiff Name & S/o', type: 'text' },
+          { key: 'defendant', label: 'Defendant Name & S/o', type: 'text' },
+          { key: 'instrument', label: 'Type of Document (Sale Deed/Gift Deed etc.)', type: 'text' },
+          { key: 'reg_no', label: 'Registration No. / Document No.', type: 'text' },
+          { key: 'reg_date', label: 'Date of Registration', type: 'text' },
+          { key: 'property', label: 'Property (Khasra/Khata No.)', type: 'text' },
+          { key: 'tehsil', label: 'Tehsil / District', type: 'text' },
+          { key: 'fraud_nature', label: 'Nature of Forgery/Fraud', type: 'text' }
+        ],
+        checklist: ['Copy of Impugned Instrument', 'Plaintiff\'s Original Title Documents', 'Handwriting Expert Report (if available)', 'FIR Copy (if criminal case filed)', 'Court Fee Rs. 15/-', 'Vakalatnama'],
+        generate: (d) => `IN THE COURT OF ${d.court || 'SENIOR CIVIL JUDGE'}\n\nCivil Suit No. _____ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n                                                            (PLAINTIFF)\n\n                              VERSUS\n\n${d.defendant || '______'}\n                                                           (DEFENDANT)\n\n     SUIT FOR CANCELLATION OF INSTRUMENT UNDER SECTION 39\n     OF THE SPECIFIC RELIEF ACT, 1877\n\nRespectfully Sheweth:\n\n1.   That the Plaintiff is the lawful and rightful owner of the property bearing Khasra/Khata No. ${d.property || '______'}, situated in Tehsil/District ${d.tehsil || '______'}, duly supported by the relevant revenue record and ownership documents.\n\n2.   That the Plaintiff has recently come to know that the Defendant has fraudulently got executed and registered a ${d.instrument || '______'} bearing No. ${d.reg_no || '______'} dated ${d.reg_date || '______'}, in respect of the suit property, on the basis of ${d.fraud_nature || 'a forged and fabricated document bearing the Plaintiff\'s purported thumb impression/signature which is totally false and the Plaintiff never executed any such document in favour of the Defendant'}.\n\n3.   That the aforesaid ${d.instrument || 'document'} is void, illegal, fraudulent and of no legal effect whatsoever because:\n     (a) The Plaintiff never appeared before the Sub-Registrar nor executed the said document;\n     (b) The alleged thumb impression/signature is forged and fabricated;\n     (c) The Plaintiff never received any consideration;\n     (d) The document was executed through fraud and misrepresentation.\n\n4.   That under Section 39 of the Specific Relief Act, 1877, when a written instrument is void or voidable against the Plaintiff, and may be evidence of a right against him, he can sue for its cancellation or delivery up of the instrument.\n\n5.   That the existence of the impugned instrument is causing reasonable apprehension that if it is left outstanding, it may cause serious injury to the Plaintiff.\n\n6.   That the court fee of Rs. 15/- has been affixed, this suit being declaratory in nature.\n\n                                       PRAYER\n\n(i)   A decree for cancellation of the ${d.instrument || 'document'} bearing Registration No. ${d.reg_no || '______'} dated ${d.reg_date || '______'} be passed, declaring it to be void, illegal and of no legal effect;\n\n(ii)  A consequential decree for possession of the suit property be passed if possession has been taken;\n\n(iii) A permanent injunction restraining the Defendant from creating third party interest in the suit property on the basis of the impugned instrument be granted;\n\n(iv)  Costs of the suit be awarded;\n\n(v)   Any other relief deemed fit and just be granted.\n\n                                                        Respectfully submitted,\n\n                                                        ______________________\n                                                              PLAINTIFF\n                                                        Through Learned Counsel`
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court', label: 'عدالت کا نام', type: 'text' },
+          { key: 'plaintiff', label: 'مدعی (نام، ولدیت)', type: 'text' },
+          { key: 'defendant', label: 'مدعاعلیہ (نام، ولدیت)', type: 'text' },
+          { key: 'instrument', label: 'دستاویز کی نوعیت (بیع نامہ / ہبہ نامہ)', type: 'text' },
+          { key: 'reg_no', label: 'رجسٹریشن / دستاویز نمبر', type: 'text' },
+          { key: 'reg_date', label: 'تاریخ رجسٹریشن', type: 'text' },
+          { key: 'property', label: 'خسرہ / خاطہ نمبر', type: 'text' },
+          { key: 'tehsil', label: 'تحصیل / ضلع', type: 'text' },
+          { key: 'fraud_nature', label: 'جعل سازی کی نوعیت', type: 'text' }
+        ],
+        checklist: ['نقل متنازعہ دستاویز', 'اصل دستاویزات ملکیت', 'رپورٹ ماہر خطاطی', 'نقل ایف آئی آر', 'کورٹ فیس ۱۵ روپے', 'وکالت نامہ'],
+        generate: (d) => `بعدالت ${d.court || 'سینئر سول جج صاحب'}\n\nدعویٰ نمبر: ______ / ${new Date().getFullYear()}\n\n${d.plaintiff || '______'}\n(مدعی)\n\nبنام\n\n${d.defendant || '______'}\n(مدعاعلیہ)\n\nدعویٰ منسوخی دستاویز بموجب دفعہ ۳۹ ریلیف ایکٹ ۱۸۷۷\n\nجناب عالی!\n\n۱. یہ کہ مدعی خسرہ / خاطہ نمبر ${d.property || '______'} واقع تحصیل / ضلع ${d.tehsil || '______'} کا قانونی مالک ہے۔\n\n۲. یہ کہ مدعی کو حال ہی میں علم ہوا کہ مدعاعلیہ نے جعل سازی اور دھوکہ دہی کے ذریعے ${d.instrument || '______'} نمبر ${d.reg_no || '______'} بتاریخ ${d.reg_date || '______'} جائیداد مذکورہ کے بارے میں رجسٹرڈ کرایا ہے حالانکہ ${d.fraud_nature || 'مدعی نے کوئی دستاویز تحریر نہیں کی اور نہ سب رجسٹرار کے سامنے پیش ہوا۔'}۔\n\n۳. یہ کہ متنازعہ دستاویز شروع سے باطل ہے کیونکہ یہ جعل سازی، دھوکہ دہی اور بلا معاوضہ تیار کی گئی۔\n\n۴. یہ کہ دفعہ ۳۹ ریلیف ایکٹ کے تحت مدعی کو دستاویز منسوخ کرانے کا حق ہے کیونکہ اس کا وجود مدعی کو ضرر پہنچا رہا ہے۔\n\n۵. یہ کہ کورٹ فیس ۱۵ روپے منسلک کی جا رہی ہے۔\n\nاستدعا:\n\n(الف) دستاویز نمبر ${d.reg_no || '______'} بتاریخ ${d.reg_date || '______'} کو کالعدم قرار دیا جائے۔\n(ب) جائیداد کا قبضہ مدعی کو دلوایا جائے۔\n(ج) حکم امتناعی مستقل جاری کیا جائے۔\n(د) اخراجات مدعی کو دلوائے جائیں۔\n\nعرضے\nمدعی بذریعہ کونسل`
+      }
+    }
+  },
+
   suit_family: {
     id: 'suit_family',
     category: 'Family',
