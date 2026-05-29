@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="#0f172a"/>
+  <!-- Pillar -->
+  <rect x="248" y="148" width="16" height="224" rx="6" fill="#f59e0b"/>
+  <!-- Top crossbar -->
+  <rect x="128" y="140" width="256" height="20" rx="10" fill="#f59e0b"/>
+  <!-- Knob on top -->
+  <circle cx="256" cy="130" r="16" fill="#f59e0b"/>
+  <!-- Left arm chain -->
+  <line x1="176" y1="160" x2="148" y2="240" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+  <!-- Right arm chain -->
+  <line x1="336" y1="160" x2="364" y2="240" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+  <!-- Left pan (arc) -->
+  <path d="M 112 242 Q 148 295 184 242" fill="none" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+  <!-- Right pan (arc, slightly lower = heavier) -->
+  <path d="M 328 258 Q 364 311 400 258" fill="none" stroke="#f59e0b" stroke-width="7" stroke-linecap="round"/>
+  <!-- Base stem -->
+  <rect x="210" y="368" width="92" height="18" rx="9" fill="#f59e0b"/>
+  <!-- Base foot -->
+  <rect x="176" y="382" width="160" height="20" rx="10" fill="#f59e0b"/>
+</svg>
