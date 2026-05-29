@@ -137,7 +137,7 @@ if (!Object.values) {
 }
 
 /* ===== TEMPLATES ===== */
-const TEMPLATES = {
+var TEMPLATES = {
   // ==============================
   // CATEGORY: CRIMINAL BAILS
   // ==============================
@@ -707,7 +707,7 @@ const TEMPLATES = {
           ', the Plaintiff and the Defendant entered into a contract whereby ' +
           (d.contract_desc || '______') +
           '. The said contract was duly executed and the Plaintiff duly performed his obligations thereunder.\\n\\n2.   That the Defendant unlawfully and in breach of the aforesaid contract ' +
-          (d.breach_desc || 'failed to perform his contractual obligations despite the Plaintiff\'s repeated requests and reminders') +
+          (d.breach_desc || 'failed to perform his contractual obligations despite the Plaintiff's repeated requests and reminders') +
           '.\\n\\n3.   That due to the Defendant\'s breach of contract, the Plaintiff has suffered actual, direct and proximate losses and damages amounting to Rs. ' +
           (d.loss || '______') +
           ', the details whereof are as under:\\n     (a) Direct loss due to breach:      Rs. ____________\\n     (b) Consequential loss:             Rs. ____________\\n     (c) Loss of profit/opportunity:     Rs. ____________\\n\\n4.   That a legal notice was duly sent to the Defendant calling upon him to remedy the breach and pay the damages, but the Defendant failed to respond and remedy the breach.\\n\\n5.   That under Sections 73 and 74 of the Contract Act, 1872, the Plaintiff is entitled to recover from the Defendant compensation for the losses naturally arising from the breach of contract.\\n\\n6.   That the suit is within the prescribed period of limitation of three years from the date of breach.\\n\\n                                       PRAYER\\n\\n(i)   A decree for Rs. ' +
@@ -785,7 +785,7 @@ const TEMPLATES = {
           ', Mutation No. ' +
           (d.mutation_no || '______') +
           ' was fraudulently and illegally sanctioned in favour of the Defendant on the basis of ' +
-          (d.fraud || 'forged and fabricated documents/misrepresentation, without the Plaintiff\'s knowledge, consent or presence') +
+          (d.fraud || 'forged and fabricated documents/misrepresentation, without the Plaintiff's knowledge, consent or presence') +
           '.\\n\\n3.   That the aforesaid mutation is void ab initio as it was obtained through fraud, misrepresentation, forgery and without lawful authority. The Plaintiff never appeared before the Revenue Officer nor executed any document in favour of the Defendant.\\n\\n4.   That the impugned mutation confers no legal title upon the Defendant, as a mutation is merely a fiscal record and does not create or extinguish title. The Defendant cannot derive better title than what the mutation grantor possessed.\\n\\n5.   That the Plaintiff came to know about the illegal mutation only recently and the suit is within the period of limitation as the Plaintiff was not a party to the mutation proceedings.\\n\\n6.   That court fee of Rs. 15/- has been affixed, this being a suit for declaration.\\n\\n                                       PRAYER\\n\\n(i)   A decree declaring Mutation No. ' +
           (d.mutation_no || '______') +
           ' dated ' +
@@ -1112,7 +1112,7 @@ const TEMPLATES = {
           ' dated ' +
           (d.reg_date || '______') +
           ', in respect of the suit property, on the basis of ' +
-          (d.fraud_nature || 'a forged and fabricated document bearing the Plaintiff\'s purported thumb impression/signature which is totally false and the Plaintiff never executed any such document in favour of the Defendant') +
+          (d.fraud_nature || 'a forged and fabricated document bearing the Plaintiff's purported thumb impression/signature which is totally false and the Plaintiff never executed any such document in favour of the Defendant') +
           '.\\n\\n3.   That the aforesaid ' +
           (d.instrument || 'document') +
           ' is void, illegal, fraudulent and of no legal effect whatsoever because:\\n     (a) The Plaintiff never appeared before the Sub-Registrar nor executed the said document;\\n     (b) The alleged thumb impression/signature is forged and fabricated;\\n     (c) The Plaintiff never received any consideration;\\n     (d) The document was executed through fraud and misrepresentation.\\n\\n4.   That under Section 39 of the Specific Relief Act, 1877, when a written instrument is void or voidable against the Plaintiff, and may be evidence of a right against him, he can sue for its cancellation or delivery up of the instrument.\\n\\n5.   That the existence of the impugned instrument is causing reasonable apprehension that if it is left outstanding, it may cause serious injury to the Plaintiff.\\n\\n6.   That the court fee of Rs. 15/- has been affixed, this suit being declaratory in nature.\\n\\n                                       PRAYER\\n\\n(i)   A decree for cancellation of the ' +
@@ -1409,7 +1409,7 @@ const TEMPLATES = {
           ' and their union is blessed with the following minor children: ' +
           (d.children || '______') +
           '.\\n\\n2.   That the minor children are presently in the custody of the Respondent which is not in their best interest and welfare.\\n\\n3.   That under Islamic law (Hizanat), the mother has the primary right of custody of minor children. A mother\'s right of Hizanat over sons continues up to the age of 7 years and over daughters until puberty.\\n\\n4.   That ' +
-          (d.grounds || 'the Petitioner is a fit and proper person to have custody of the minor children and it is in the best interest and welfare of the children to be in the Petitioner\\'s custody') +
+          (d.grounds || 'the Petitioner is a fit and proper person to have custody of the minor children and it is in the best interest and welfare of the children to be in the Petitioner\'s custody') +
           '.\\n\\n5.   That the Petitioner is financially stable, emotionally fit and capable of providing proper care, education and upbringing to the minor children.\\n\\n6.   That the welfare of the minor children, which is the paramount consideration under the Guardians and Wards Act, 1890, demands that custody be granted to the Petitioner.\\n\\n                                       PRAYER\\n\\n(i)   A decree/order for custody (Hizanat) of the minor children ' +
           (d.children || '______') +
           ' be passed in favour of the Petitioner;\\n\\n(ii)  The Respondent be granted reasonable visitation/access rights;\\n\\n(iii) The Respondent be restrained from removing the children from the jurisdiction of this Court;\\n\\n(iv)  Costs be awarded;\\n\\n(v)   Any other relief deemed fit in the interest of the children be granted.\\n\\n                                                        Respectfully submitted,\\n\\n                                                        ______________________\\n                                                              PETITIONER\\n                                                        Through Learned Counsel'; }
@@ -2321,6 +2321,7 @@ const TEMPLATES = {
     }
   }
 };
+
 
 /* ===== END TEMPLATES ===== */
 
