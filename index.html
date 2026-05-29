@@ -219,10 +219,133 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #pwa-banner p strong{display:block;font-size:13px;margin-bottom:2px}
 .pwa-install-btn{background:#f59e0b;color:#0f172a;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;-webkit-appearance:none}
 .pwa-dismiss{background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;padding:0 4px}
+/* ── AUTH OVERLAY ── */
+#auth-overlay{position:fixed;inset:0;background:#0f172a;z-index:9999;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:20px}
+#auth-box{background:#1e293b;border-radius:20px;padding:32px 28px;width:100%;max-width:380px;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+#auth-logo{text-align:center;margin-bottom:20px}
+#auth-logo .icon{font-size:42px;display:block;margin-bottom:6px}
+#auth-logo h2{color:#fff;font-size:18px;font-weight:800}
+#auth-logo p{color:#94a3b8;font-size:12px;margin-top:3px}
+.auth-panel{display:none}
+.auth-panel.active{display:block}
+.auth-label{display:block;font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.auth-input{width:100%;background:#0f172a;border:1.5px solid #334155;border-radius:10px;padding:11px 14px;font-size:15px;color:#fff;outline:none;font-family:inherit;-webkit-appearance:none;margin-bottom:14px}
+.auth-input:focus{border-color:#f59e0b}
+.auth-input-wrap{position:relative}
+.auth-input-wrap .auth-input{padding-right:44px}
+.auth-eye{position:absolute;right:12px;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);background:none;border:none;color:#64748b;font-size:18px;cursor:pointer;padding:0;line-height:1;margin-top:-7px}
+.auth-btn{width:100%;background:#f59e0b;color:#0f172a;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;margin-top:4px;-webkit-appearance:none}
+.auth-btn:active{opacity:.85}
+.auth-btn-ghost{width:100%;background:none;border:1.5px solid #334155;border-radius:10px;padding:11px;font-size:13px;font-weight:700;color:#94a3b8;cursor:pointer;margin-top:10px;-webkit-appearance:none}
+.auth-link{text-align:center;margin-top:14px;font-size:12px;color:#64748b}
+.auth-link a{color:#f59e0b;cursor:pointer;text-decoration:none;font-weight:700}
+.auth-err{background:#450a0a;border:1px solid #dc2626;border-radius:8px;padding:10px 12px;font-size:12px;color:#fca5a5;margin-bottom:12px;display:none}
+.auth-ok{background:#052e16;border:1px solid #16a34a;border-radius:8px;padding:10px 12px;font-size:12px;color:#86efac;margin-bottom:12px;display:none}
+.auth-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px}
+.auth-sub{font-size:12px;color:#64748b;margin-bottom:20px}
+.auth-select{width:100%;background:#0f172a;border:1.5px solid #334155;border-radius:10px;padding:11px 14px;font-size:14px;color:#fff;outline:none;font-family:inherit;-webkit-appearance:none;margin-bottom:14px;cursor:pointer}
+.auth-select:focus{border-color:#f59e0b}
+.auth-divider{border:none;border-top:1px solid #334155;margin:16px 0}
+.auth-strength{height:4px;border-radius:2px;margin-top:-10px;margin-bottom:14px;background:#334155;overflow:hidden}
+.auth-strength-bar{height:100%;border-radius:2px;width:0;transition:width .3s,background .3s}
+.auth-hint{font-size:10px;color:#64748b;margin-top:-10px;margin-bottom:14px}
 </style>
 </head>
 <body>
 <div id="err-box"></div>
+
+<!-- ══ AUTH OVERLAY ══ -->
+<div id="auth-overlay">
+  <div id="auth-box">
+    <div id="auth-logo">
+      <span class="icon">&#x2696;&#xFE0F;</span>
+      <h2>Legal Practice Suite</h2>
+      <p>Pakistan &bull; Secure Access</p>
+    </div>
+
+    <!-- PANEL: Login -->
+    <div class="auth-panel active" id="auth-panel-login">
+      <div class="auth-title">Welcome Back</div>
+      <div class="auth-sub">Enter your password to continue</div>
+      <div class="auth-err" id="login-err"></div>
+      <label class="auth-label">Password</label>
+      <div class="auth-input-wrap">
+        <input class="auth-input" id="login-pass" type="password" placeholder="Your password" autocomplete="current-password"/>
+        <button class="auth-eye" onclick="authToggleEye('login-pass',this)" tabindex="-1">&#x1F441;</button>
+      </div>
+      <button class="auth-btn" onclick="authDoLogin()">Unlock App</button>
+      <div class="auth-link"><a onclick="authShow('forgot-1')">Forgot password?</a></div>
+    </div>
+
+    <!-- PANEL: Setup (first time) -->
+    <div class="auth-panel" id="auth-panel-setup">
+      <div class="auth-title">Create Password</div>
+      <div class="auth-sub">Set a password to protect your data</div>
+      <div class="auth-err" id="setup-err"></div>
+      <label class="auth-label">New Password</label>
+      <div class="auth-input-wrap">
+        <input class="auth-input" id="setup-pass1" type="password" placeholder="Min 6 characters" oninput="authPassStrength(this.value)" autocomplete="new-password"/>
+        <button class="auth-eye" onclick="authToggleEye('setup-pass1',this)" tabindex="-1">&#x1F441;</button>
+      </div>
+      <div class="auth-strength"><div class="auth-strength-bar" id="strength-bar"></div></div>
+      <div class="auth-hint" id="strength-hint"></div>
+      <label class="auth-label">Confirm Password</label>
+      <div class="auth-input-wrap">
+        <input class="auth-input" id="setup-pass2" type="password" placeholder="Repeat password" autocomplete="new-password"/>
+        <button class="auth-eye" onclick="authToggleEye('setup-pass2',this)" tabindex="-1">&#x1F441;</button>
+      </div>
+      <hr class="auth-divider"/>
+      <div class="auth-title" style="font-size:13px;margin-bottom:4px">Recovery Question</div>
+      <div class="auth-sub">Used if you forget your password</div>
+      <label class="auth-label">Security Question</label>
+      <select class="auth-select" id="setup-question">
+        <option value="">-- Select a question --</option>
+        <option>What is your mother's maiden name?</option>
+        <option>What was the name of your first school?</option>
+        <option>What is the name of your hometown?</option>
+        <option>What was your childhood nickname?</option>
+        <option>What is your oldest sibling's middle name?</option>
+        <option>What was the name of your first pet?</option>
+        <option>What was your first car's model?</option>
+        <option>What is your maternal grandmother's first name?</option>
+      </select>
+      <label class="auth-label">Your Answer</label>
+      <input class="auth-input" id="setup-answer" type="text" placeholder="Answer (case-insensitive)" autocomplete="off"/>
+      <button class="auth-btn" onclick="authDoSetup()">Save &amp; Unlock</button>
+    </div>
+
+    <!-- PANEL: Forgot step 1 — verify security answer -->
+    <div class="auth-panel" id="auth-panel-forgot-1">
+      <div class="auth-title">Account Recovery</div>
+      <div class="auth-sub">Answer your security question</div>
+      <div class="auth-err" id="forgot1-err"></div>
+      <div class="auth-ok" id="forgot1-ok"></div>
+      <label class="auth-label" id="forgot-q-label">Security Question</label>
+      <input class="auth-input" id="forgot-answer" type="text" placeholder="Your answer" autocomplete="off"/>
+      <button class="auth-btn" onclick="authVerifyAnswer()">Verify Answer</button>
+      <button class="auth-btn-ghost" onclick="authShow('login')">&#x2190; Back to Login</button>
+    </div>
+
+    <!-- PANEL: Forgot step 2 — set new password -->
+    <div class="auth-panel" id="auth-panel-forgot-2">
+      <div class="auth-title">Set New Password</div>
+      <div class="auth-sub">Choose a new password for your account</div>
+      <div class="auth-err" id="forgot2-err"></div>
+      <label class="auth-label">New Password</label>
+      <div class="auth-input-wrap">
+        <input class="auth-input" id="forgot-pass1" type="password" placeholder="Min 6 characters" autocomplete="new-password"/>
+        <button class="auth-eye" onclick="authToggleEye('forgot-pass1',this)" tabindex="-1">&#x1F441;</button>
+      </div>
+      <label class="auth-label">Confirm Password</label>
+      <div class="auth-input-wrap">
+        <input class="auth-input" id="forgot-pass2" type="password" placeholder="Repeat password" autocomplete="new-password"/>
+        <button class="auth-eye" onclick="authToggleEye('forgot-pass2',this)" tabindex="-1">&#x1F441;</button>
+      </div>
+      <button class="auth-btn" onclick="authDoReset()">Reset Password</button>
+    </div>
+  </div>
+</div>
+
 <!-- PWA install banner -->
 <div id="pwa-banner">
   <p><strong>&#x2696;&#xFE0F; Install Legal Practice Suite</strong>Add to home screen for offline access &amp; fast launch</p>
@@ -234,6 +357,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div id="navbar">
   <div><h1>&#x2696;&#xFE0F; Legal Practice Suite</h1><p>Pakistan &#x2022; 32 Templates &#x2022; AI &#x2022; Case Diary</p></div>
   <button id="btn-back">&#x2190; Menu</button>
+  <button onclick="authChangePassword()" style="margin-left:6px;background:#1e293b;border:none;color:#f59e0b;font-size:18px;padding:4px 8px;border-radius:8px;cursor:pointer;line-height:1" title="Change Password">&#x1F512;</button>
 </div>
 
 <!-- MAIN TABS -->
@@ -1626,6 +1750,194 @@ el('pwa-install-btn').onclick=function(){
   deferredPWA.userChoice.then(function(){deferredPWA=null;el('pwa-banner').style.display='none';});
 };
 window.addEventListener('appinstalled',function(){el('pwa-banner').style.display='none';});
+
+/* ══════════════════════════════════
+   AUTH SYSTEM
+   Storage keys:
+     pk_auth_hash   – SHA-256 hex of password
+     pk_auth_q      – security question text
+     pk_auth_aq     – SHA-256 hex of lowercased answer
+     pk_session     – timestamp of last successful login
+   Session valid for 8 hours
+   ══════════════════════════════════ */
+var AUTH_PASS_KEY   = 'pk_auth_hash';
+var AUTH_Q_KEY      = 'pk_auth_q';
+var AUTH_AQ_KEY     = 'pk_auth_aq';
+var AUTH_SESSION    = 'pk_session';
+var AUTH_TIMEOUT_MS = 8 * 60 * 60 * 1000; /* 8 hours */
+
+/* Simple async SHA-256 via SubtleCrypto (available in all modern browsers) */
+function sha256(str) {
+  var buf = new TextEncoder().encode(str);
+  return crypto.subtle.digest('SHA-256', buf).then(function(hash) {
+    return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+  });
+}
+
+function authEl(id){ return document.getElementById(id); }
+
+function authShow(panel) {
+  var panels = ['login','setup','forgot-1','forgot-2'];
+  for(var i=0;i<panels.length;i++){
+    var p = authEl('auth-panel-'+panels[i]);
+    if(p) p.className = 'auth-panel' + (panels[i]===panel ? ' active' : '');
+  }
+  /* populate the security question on forgot panel */
+  if(panel==='forgot-1'){
+    var q = localStorage.getItem(AUTH_Q_KEY)||'Security Question';
+    authEl('forgot-q-label').textContent = q;
+    authEl('forgot1-err').style.display='none';
+    authEl('forgot1-ok').style.display='none';
+    authEl('forgot-answer').value='';
+  }
+}
+
+function authToggleEye(inputId, btn) {
+  var inp = authEl(inputId);
+  if(inp.type==='password'){ inp.type='text'; btn.style.opacity='1'; }
+  else { inp.type='password'; btn.style.opacity='.5'; }
+}
+
+function authPassStrength(val) {
+  var bar = authEl('strength-bar');
+  var hint = authEl('strength-hint');
+  var score = 0;
+  if(val.length>=6) score++;
+  if(val.length>=10) score++;
+  if(/[A-Z]/.test(val)) score++;
+  if(/[0-9]/.test(val)) score++;
+  if(/[^A-Za-z0-9]/.test(val)) score++;
+  var colors = ['#ef4444','#f97316','#eab308','#22c55e','#16a34a'];
+  var labels = ['Very Weak','Weak','Fair','Strong','Very Strong'];
+  bar.style.width = (score*20)+'%';
+  bar.style.background = colors[score-1]||'#334155';
+  hint.textContent = val.length>0 ? labels[score-1]||'' : '';
+}
+
+function authShowErr(id, msg){
+  var el=authEl(id); el.textContent=msg; el.style.display='block';
+}
+function authHideErr(id){ authEl(id).style.display='none'; }
+
+function authCheckSession(){
+  var ts = parseInt(localStorage.getItem(AUTH_SESSION)||'0',10);
+  return (Date.now()-ts) < AUTH_TIMEOUT_MS;
+}
+
+function authGrantAccess(){
+  localStorage.setItem(AUTH_SESSION, String(Date.now()));
+  authEl('auth-overlay').style.display='none';
+}
+
+function authInit(){
+  var hasPass = !!localStorage.getItem(AUTH_PASS_KEY);
+  if(!hasPass){
+    /* First launch — show setup */
+    authShow('setup');
+    return;
+  }
+  if(authCheckSession()){
+    /* Valid session — skip login */
+    authGrantAccess();
+    return;
+  }
+  authShow('login');
+  /* focus after short delay (keyboard on mobile) */
+  setTimeout(function(){ var p=authEl('login-pass'); if(p)p.focus(); },300);
+}
+
+function authDoLogin(){
+  var pass = authEl('login-pass').value;
+  if(!pass){ authShowErr('login-err','Please enter your password.'); return; }
+  authHideErr('login-err');
+  sha256(pass).then(function(hash){
+    if(hash === localStorage.getItem(AUTH_PASS_KEY)){
+      authEl('login-pass').value='';
+      authGrantAccess();
+    } else {
+      authShowErr('login-err','Incorrect password. Try again or use Forgot Password.');
+    }
+  });
+}
+
+function authDoSetup(){
+  var p1 = authEl('setup-pass1').value;
+  var p2 = authEl('setup-pass2').value;
+  var q  = authEl('setup-question').value;
+  var a  = authEl('setup-answer').value.trim();
+  authHideErr('setup-err');
+  if(p1.length<6){ authShowErr('setup-err','Password must be at least 6 characters.'); return; }
+  if(p1!==p2){ authShowErr('setup-err','Passwords do not match.'); return; }
+  if(!q){ authShowErr('setup-err','Please select a security question.'); return; }
+  if(!a){ authShowErr('setup-err','Please provide an answer to the security question.'); return; }
+  sha256(p1).then(function(ph){
+    return sha256(a.toLowerCase()).then(function(ah){
+      localStorage.setItem(AUTH_PASS_KEY, ph);
+      localStorage.setItem(AUTH_Q_KEY, q);
+      localStorage.setItem(AUTH_AQ_KEY, ah);
+      authEl('setup-pass1').value='';
+      authEl('setup-pass2').value='';
+      authEl('setup-answer').value='';
+      authGrantAccess();
+    });
+  });
+}
+
+function authVerifyAnswer(){
+  var ans = authEl('forgot-answer').value.trim();
+  authHideErr('forgot1-err');
+  authEl('forgot1-ok').style.display='none';
+  if(!ans){ authShowErr('forgot1-err','Please enter your answer.'); return; }
+  sha256(ans.toLowerCase()).then(function(ah){
+    if(ah === localStorage.getItem(AUTH_AQ_KEY)){
+      authEl('forgot1-ok').textContent='Answer verified! Set your new password.';
+      authEl('forgot1-ok').style.display='block';
+      setTimeout(function(){ authShow('forgot-2'); },800);
+    } else {
+      authShowErr('forgot1-err','Incorrect answer. Please try again.');
+    }
+  });
+}
+
+function authDoReset(){
+  var p1 = authEl('forgot-pass1').value;
+  var p2 = authEl('forgot-pass2').value;
+  authHideErr('forgot2-err');
+  if(p1.length<6){ authShowErr('forgot2-err','Password must be at least 6 characters.'); return; }
+  if(p1!==p2){ authShowErr('forgot2-err','Passwords do not match.'); return; }
+  sha256(p1).then(function(ph){
+    localStorage.setItem(AUTH_PASS_KEY, ph);
+    authEl('forgot-pass1').value='';
+    authEl('forgot-pass2').value='';
+    authGrantAccess();
+  });
+}
+
+/* Allow Enter key on password fields */
+document.addEventListener('keydown', function(e){
+  if(e.key!=='Enter') return;
+  var panel = document.querySelector('.auth-panel.active');
+  if(!panel) return;
+  var id = panel.id;
+  if(id==='auth-panel-login') authDoLogin();
+  else if(id==='auth-panel-setup') authDoSetup();
+  else if(id==='auth-panel-forgot-1') authVerifyAnswer();
+  else if(id==='auth-panel-forgot-2') authDoReset();
+});
+
+/* Boot auth */
+authInit();
+
+/* Change password helper (can be called from settings) */
+function authChangePassword(){
+  localStorage.removeItem(AUTH_PASS_KEY);
+  localStorage.removeItem(AUTH_Q_KEY);
+  localStorage.removeItem(AUTH_AQ_KEY);
+  localStorage.removeItem(AUTH_SESSION);
+  authShow('setup');
+  authEl('auth-overlay').style.display='-webkit-flex';
+  authEl('auth-overlay').style.display='flex';
+}
 
 /* ── Register Service Worker ── */
 if('serviceWorker' in navigator){
