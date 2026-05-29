@@ -1,0 +1,16 @@
+{
+  "name": "Legal Practice Suite – Pakistan",
+  "short_name": "Legal Suite",
+  "description": "Pakistani Legal Document Drafter, AI Argument Assistant & Case Diary",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "business"],
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
