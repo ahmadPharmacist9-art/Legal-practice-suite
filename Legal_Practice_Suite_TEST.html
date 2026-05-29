@@ -3,22 +3,28 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Legal Practice Suite</title>
+<title>Legal Practice Suite – Pakistan</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b}
-#err-box{background:#dc2626;color:#fff;padding:16px;font-size:14px;display:none;white-space:pre-wrap;word-break:break-all}
-/* NAV */
-#navbar{background:#0f172a;color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:99}
-#navbar h1{font-size:17px;font-weight:800}
-#navbar p{font-size:11px;color:#94a3b8}
-#btn-back{margin-left:auto;background:#1e293b;border:none;color:#cbd5e1;font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;cursor:pointer;display:none}
-/* HOME */
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;overflow-x:hidden}
+/* ── ERROR BOX ── */
+#err-box{background:#dc2626;color:#fff;padding:16px;font-size:13px;display:none;white-space:pre-wrap;word-break:break-all;z-index:9999;position:relative}
+/* ── NAVBAR ── */
+#navbar{background:#0f172a;color:#fff;padding:10px 16px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:10px;position:sticky;top:0;z-index:200;height:54px}
+#navbar h1{font-size:16px;font-weight:800;white-space:nowrap}
+#navbar p{font-size:10px;color:#94a3b8;white-space:nowrap}
+#btn-back{margin-left:auto;background:#1e293b;border:none;color:#cbd5e1;font-size:11px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;display:none;white-space:nowrap;-webkit-appearance:none}
+/* ── MAIN TABS ── */
+#main-tabs{background:#fff;border-bottom:2px solid #e2e8f0;display:-webkit-flex;display:flex;position:sticky;top:54px;z-index:190;height:46px}
+.mtab{-webkit-flex:1;flex:1;border:none;background:none;font-size:13px;font-weight:700;color:#64748b;cursor:pointer;padding:0 4px;border-bottom:3px solid transparent;margin-bottom:-2px;-webkit-appearance:none;transition:color .15s}
+.mtab.on{color:#0f172a;border-bottom-color:#0f172a}
+.mtab .mtico{font-size:15px;margin-right:4px}
+/* ── HOME (Templates list) ── */
 #home-wrap{padding:14px;max-width:1100px;margin:0 auto}
 .htitle{text-align:center;padding:6px 0 14px}
 .htitle h2{font-size:20px;font-weight:800}
 .htitle p{font-size:13px;color:#64748b;margin-top:3px}
-#cat-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px}
+#cat-bar{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:8px;-webkit-justify-content:center;justify-content:center;margin-bottom:16px}
 .cbtn{padding:7px 14px;border-radius:99px;border:1.5px solid #e2e8f0;background:#fff;font-size:13px;font-weight:700;color:#64748b;cursor:pointer;-webkit-appearance:none}
 .cbtn.on{background:#0f172a;color:#fff;border-color:#0f172a}
 #card-grid{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:12px}
@@ -35,10 +41,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .lb{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px}
 .lb-en{background:#dbeafe;color:#1d4ed8}
 .lb-ur{background:#dcfce7;color:#166534}
-/* DRAFTER */
-#drafter{display:none;height:calc(100vh - 54px);overflow:hidden}
-#sidebar{background:#fff;border-right:1px solid #e2e8f0;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;overflow:hidden;height:100%}
-@media(min-width:900px){#sidebar{width:380px;-webkit-flex-shrink:0;flex-shrink:0}}
+/* ── DRAFTER ── */
+#drafter{display:none;height:calc(100vh - 100px);overflow:hidden;-webkit-flex-direction:row;flex-direction:row}
+#drafter.active{display:-webkit-flex;display:flex}
+/* Mobile form/preview toggle tabs */
+#draft-tabs{background:#fff;border-bottom:1px solid #e2e8f0;display:-webkit-flex;display:flex;height:40px;-webkit-flex-shrink:0;flex-shrink:0;position:absolute;top:0;left:0;right:0;z-index:10}
+@media(min-width:900px){#draft-tabs{display:none}}
+.dtab{-webkit-flex:1;flex:1;border:none;background:none;font-size:12px;font-weight:700;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;-webkit-appearance:none}
+.dtab.on{color:#0f172a;border-bottom-color:#0f172a}
+#drafter-inner{position:relative;-webkit-flex:1;flex:1;display:-webkit-flex;display:flex;overflow:hidden;margin-top:0}
+@media(max-width:899px){#drafter-inner{margin-top:40px;height:calc(100vh - 100px - 40px)}}
+@media(min-width:900px){#drafter-inner{height:100%}}
+/* Sidebar */
+#sidebar{background:#fff;border-right:1px solid #e2e8f0;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;overflow:hidden;width:100%;height:100%;-webkit-flex-shrink:0;flex-shrink:0}
+@media(min-width:900px){#sidebar{width:380px}}
+#sidebar.mobile-hidden{display:none}
+@media(min-width:900px){#sidebar.mobile-hidden{display:-webkit-flex;display:flex}}
 #sb-head{padding:12px 16px;border-bottom:1px solid #f1f5f9;-webkit-flex-shrink:0;flex-shrink:0}
 #tmpl-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:5px}
 #sb-head h2{font-size:15px;font-weight:800;line-height:1.35}
@@ -53,23 +71,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .field textarea{resize:vertical;min-height:68px}
 #checklist{background:#fffbeb;border:1.5px solid #fcd34d;border-radius:10px;padding:12px;margin-top:6px}
 .chtitle{font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;margin-bottom:6px}
-#checklist li{font-size:12px;color:#78350f;margin-bottom:3px;padding-left:14px;position:relative;list-style:none}
-#checklist li::before{content:"checkmark";position:absolute;left:0;color:#d97706;font-weight:700;content:"✓"}
+#checklist li{font-size:12px;color:#78350f;margin-bottom:3px;padding-left:18px;position:relative;list-style:none}
+#checklist li::before{content:"\2713";position:absolute;left:0;color:#d97706;font-weight:700}
 #action-bar{padding:10px 16px;border-top:1px solid #e2e8f0;display:-webkit-flex;display:flex;gap:8px;-webkit-flex-shrink:0;flex-shrink:0}
 .abtn{border:none;border-radius:9px;font-size:13px;font-weight:700;padding:11px 0;cursor:pointer;-webkit-flex:1;flex:1;-webkit-appearance:none}
 #btn-pdf{background:#2563eb;color:#fff}
 #btn-word{background:#059669;color:#fff}
-/* PREVIEW */
-#preview-pane{display:none;-webkit-flex:1;flex:1;background:#e2e8f0;-webkit-flex-direction:column;flex-direction:column;overflow:hidden}
+/* Preview pane */
+#preview-pane{display:none;-webkit-flex:1;flex:1;background:#e2e8f0;-webkit-flex-direction:column;flex-direction:column;overflow:hidden;height:100%}
 @media(min-width:900px){#preview-pane{display:-webkit-flex;display:flex}}
-#pv-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 20px;font-size:13px;font-weight:600;color:#64748b;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px}
-#pv-scroll{-webkit-flex:1;flex:1;overflow-y:auto;padding:20px}
-#pv-paper{max-width:760px;margin:0 auto;background:#fff;border-radius:12px;padding:40px 48px}
+#preview-pane.mobile-show{display:-webkit-flex;display:flex}
+#pv-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 20px;font-size:13px;font-weight:600;color:#64748b;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px;-webkit-flex-shrink:0;flex-shrink:0}
+#pv-scroll{-webkit-flex:1;flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+#pv-paper{max-width:760px;margin:0 auto;background:#fff;border-radius:12px;padding:28px 24px}
 #doc-preview{white-space:pre-wrap;line-height:1.9;font-size:13px;color:#1e293b}
-/* colour sets */
-.c-Criminal .cbar{background:#ef4444}.c-Criminal .cicon{background:#fef2f2;color:#dc2626}
-.c-Civil    .cbar{background:#3b82f6}.c-Civil    .cicon{background:#eff6ff;color:#2563eb}
-.c-Family   .cbar{background:#ec4899}.c-Family   .cicon{background:#fdf2f8;color:#db2777}
+/* Category colour sets */
+.c-Criminal .cbar,.c-Criminal #tmpl-badge.b-Criminal~.cbar{background:#ef4444}.c-Criminal .cicon{background:#fef2f2;color:#dc2626}
+.c-Civil .cbar{background:#3b82f6}.c-Civil .cicon{background:#eff6ff;color:#2563eb}
+.c-Family .cbar{background:#ec4899}.c-Family .cicon{background:#fdf2f8;color:#db2777}
 .c-Corporate .cbar{background:#10b981}.c-Corporate .cicon{background:#ecfdf5;color:#059669}
 .c-Affidavits .cbar{background:#f59e0b}.c-Affidavits .cicon{background:#fffbeb;color:#d97706}
 .b-Criminal{background:#fef2f2;color:#dc2626}
@@ -77,66 +96,184 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .b-Family{background:#fdf2f8;color:#db2777}
 .b-Corporate{background:#ecfdf5;color:#059669}
 .b-Affidavits{background:#fffbeb;color:#d97706}
+/* ─────────────── ARGUMENT ASSISTANT ─────────────── */
+#ai-section{display:none;max-width:820px;margin:0 auto;padding:16px}
+#ai-section.active{display:block}
+/* API Key card */
+.ai-card{background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:18px;margin-bottom:14px}
+.ai-card-title{font-size:13px;font-weight:800;color:#0f172a;margin-bottom:12px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px}
+.ai-card-title .ico{font-size:18px}
+.key-row{display:-webkit-flex;display:flex;gap:8px}
+.key-row input{-webkit-flex:1;flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:9px 12px;font-size:13px;outline:none;-webkit-appearance:none;color:#1e293b;background:#fafafa;font-family:monospace}
+.key-row input:focus{border-color:#3b82f6;background:#fff}
+.key-btn{background:#0f172a;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;-webkit-appearance:none}
+.key-status{font-size:11px;margin-top:6px;color:#64748b}
+.key-status.ok{color:#059669}
+.key-note{font-size:11px;color:#94a3b8;margin-top:8px;line-height:1.5}
+/* Upload area */
+.upload-zone{border:2px dashed #cbd5e1;border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:#f8fafc;transition:border-color .15s;margin-bottom:12px}
+.upload-zone:active{border-color:#3b82f6;background:#eff6ff}
+.upload-zone .uico{font-size:32px;margin-bottom:8px}
+.upload-zone p{font-size:13px;color:#64748b;margin-bottom:4px}
+.upload-zone small{font-size:11px;color:#94a3b8}
+#doc-img-preview{max-width:100%;border-radius:8px;margin-top:10px;display:none}
+.or-div{text-align:center;font-size:12px;color:#94a3b8;font-weight:700;margin:10px 0;position:relative}
+.or-div::before,.or-div::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:#e2e8f0}
+.or-div::before{left:0}
+.or-div::after{right:0}
+#doc-text{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:10px;font-size:13px;min-height:100px;resize:vertical;outline:none;font-family:inherit;background:#fafafa;-webkit-appearance:none;color:#1e293b}
+#doc-text:focus{border-color:#3b82f6;background:#fff}
+.analyze-btn{width:100%;background:#1d4ed8;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px;-webkit-appearance:none;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;gap:8px}
+.analyze-btn:disabled{background:#94a3b8;cursor:not-allowed}
+/* Results */
+#ai-results{display:none}
+#ai-results.active{display:block}
+.result-section{background:#fff;border-radius:12px;border:1px solid #e2e8f0;margin-bottom:10px;overflow:hidden}
+.rs-head{padding:12px 16px;font-size:12px;font-weight:800;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:8px}
+.rs-body{padding:12px 16px;font-size:13px;color:#334155;line-height:1.7;border-top:1px solid #f1f5f9;white-space:pre-wrap}
+.badge-bail{display:inline-block;padding:4px 12px;border-radius:99px;font-size:13px;font-weight:800}
+.bail-nb{background:#fef2f2;color:#dc2626}
+.bail-b{background:#f0fdf4;color:#166534}
+.bail-d{background:#fffbeb;color:#92400e}
+.ai-loading{text-align:center;padding:40px 20px;color:#64748b}
+.ai-loading .spin{font-size:32px;display:block;margin-bottom:12px}
+.ai-err{background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:14px;color:#dc2626;font-size:13px;margin-bottom:12px}
 </style>
 </head>
 <body>
 <div id="err-box"></div>
+
+<!-- NAVBAR -->
 <div id="navbar">
-  <div><h1>&#x2696;&#xFE0F; Legal Practice Suite</h1><p>Ultimate Edition &#x2022; 32 Templates &#x2022; EN / UR</p></div>
+  <div>
+    <h1>&#x2696;&#xFE0F; Legal Practice Suite</h1>
+    <p>Pakistan &#x2022; 32 Templates &#x2022; EN / UR &#x2022; AI Powered</p>
+  </div>
   <button id="btn-back">&#x2190; Menu</button>
 </div>
-<div id="home-wrap">
-  <div class="htitle">
-    <h2>Pakistani Legal Document Drafter</h2>
-    <p>Civil &middot; Criminal &middot; Family &middot; Corporate &middot; Affidavits</p>
-  </div>
-  <div id="cat-bar">Loading...</div>
-  <div id="card-grid"></div>
+
+<!-- MAIN TABS -->
+<div id="main-tabs">
+  <button class="mtab on" id="mtab-templates" onclick="switchMainTab('templates')">
+    <span class="mtico">&#x1F4CB;</span> Bail / Suit / Affidavits
+  </button>
+  <button class="mtab" id="mtab-ai" onclick="switchMainTab('ai')">
+    <span class="mtico">&#x1F916;</span> Argument Assistant
+  </button>
 </div>
-<div id="drafter">
-  <div id="sidebar">
-    <div id="sb-head"><span id="tmpl-badge"></span><h2 id="tmpl-name"></h2></div>
-    <div id="lang-bar">
-      <button class="lbtn on" id="lbtn-en">EN English</button>
-      <button class="lbtn" id="lbtn-ur">UR Urdu</button>
+
+<!-- ══ SECTION 1: TEMPLATES ══ -->
+<div id="templates-section">
+  <!-- HOME -->
+  <div id="home-wrap">
+    <div class="htitle">
+      <h2>Pakistani Legal Document Drafter</h2>
+      <p>Civil &middot; Criminal &middot; Family &middot; Corporate &middot; Affidavits</p>
     </div>
-    <div id="form-area"></div>
-    <div id="action-bar">
-      <button class="abtn" id="btn-pdf">Print / PDF</button>
-      <button class="abtn" id="btn-word">Word (.doc)</button>
-    </div>
+    <div id="cat-bar">Loading...</div>
+    <div id="card-grid"></div>
   </div>
-  <div id="preview-pane">
-    <div id="pv-bar">Live Preview <span id="pv-lang" style="margin-left:auto;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;background:#dbeafe;color:#1d4ed8">English</span></div>
-    <div id="pv-scroll"><div id="pv-paper"><div id="doc-preview"></div></div></div>
+
+  <!-- DRAFTER -->
+  <div id="drafter">
+    <!-- Mobile form/preview tabs (hidden on desktop ≥900px) -->
+    <div id="draft-tabs">
+      <button class="dtab on" id="dtab-form" onclick="setDraftTab('form')">&#x1F4DD; Form</button>
+      <button class="dtab" id="dtab-preview" onclick="setDraftTab('preview')">&#x1F441; Preview</button>
+    </div>
+    <div id="drafter-inner">
+      <div id="sidebar">
+        <div id="sb-head"><span id="tmpl-badge"></span><h2 id="tmpl-name"></h2></div>
+        <div id="lang-bar">
+          <button class="lbtn on" id="lbtn-en">EN English</button>
+          <button class="lbtn" id="lbtn-ur">UR Urdu</button>
+        </div>
+        <div id="form-area"></div>
+        <div id="action-bar">
+          <button class="abtn" id="btn-pdf">Print / PDF</button>
+          <button class="abtn" id="btn-word">Word (.doc)</button>
+        </div>
+      </div>
+      <div id="preview-pane">
+        <div id="pv-bar">Live Preview <span id="pv-lang" style="margin-left:auto;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;background:#dbeafe;color:#1d4ed8">English</span></div>
+        <div id="pv-scroll"><div id="pv-paper"><div id="doc-preview"></div></div></div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- ══ SECTION 2: ARGUMENT ASSISTANT ══ -->
+<div id="ai-section">
+
+  <!-- API Key Setup -->
+  <div class="ai-card" id="key-card">
+    <div class="ai-card-title"><span class="ico">&#x1F511;</span> Anthropic API Key</div>
+    <div class="key-row">
+      <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"/>
+      <button class="key-btn" onclick="saveApiKey()">Save</button>
+      <button class="key-btn" style="background:#64748b" onclick="toggleKeyVis()">Show</button>
+    </div>
+    <div class="key-status" id="key-status">No key saved.</div>
+    <div class="key-note">
+      Your API key is stored only on this device (localStorage). All requests go directly from your browser to Anthropic.
+      Get a key at <strong>console.anthropic.com</strong>. Usage charges apply per Anthropic pricing.
+    </div>
+  </div>
+
+  <!-- Document Input -->
+  <div class="ai-card">
+    <div class="ai-card-title"><span class="ico">&#x1F4F7;</span> Scan / Upload Document</div>
+
+    <!-- Camera / file upload -->
+    <div class="upload-zone" onclick="document.getElementById('doc-file').click()">
+      <div class="uico">&#x1F4F7;</div>
+      <p><strong>Tap to take photo or upload</strong></p>
+      <small>FIR, Warrant, Court Order, Contract, Any legal document</small>
+      <img id="doc-img-preview" src="" alt="Document preview"/>
+    </div>
+    <input type="file" id="doc-file" accept="image/*" capture="environment" style="display:none" onchange="handleFileSelect(this)"/>
+
+    <div class="or-div">OR PASTE TEXT</div>
+
+    <textarea id="doc-text" placeholder="Paste the text of the FIR / court document / contract here..."></textarea>
+
+    <button class="analyze-btn" id="analyze-btn" onclick="analyzeDocument()">
+      &#x1F50D; Analyze Document
+    </button>
+  </div>
+
+  <!-- Results -->
+  <div id="ai-results">
+    <div class="ai-card-title" style="padding:4px 0 10px;font-size:14px;font-weight:800">
+      &#x1F4CA; Analysis Results
+    </div>
+    <div id="ai-result-content"></div>
+  </div>
+
+</div><!-- /ai-section -->
+
 <script>
-/* Error handler in its own block so it runs even if TEMPLATES has a parse error */
+/* ── Error handler in isolated block so it survives TEMPLATES parse errors ── */
 window.onerror = function(msg, src, line, col, err) {
-  var box = document.getElementById('err-box');
-  if (box) {
-    box.style.display = 'block';
-    box.textContent = 'JS Error: ' + msg + ' | line ' + line + '\nUA: ' + navigator.userAgent;
-  }
+  var b = document.getElementById('err-box');
+  if (b) { b.style.display='block'; b.textContent='JS Error: '+msg+' | line '+line+'\nUA: '+navigator.userAgent; }
   return false;
 };
 </script>
 <script>
 
-/* ES5 polyfill for Object.values */
+/* ES5 polyfill */
 if (!Object.values) {
   Object.values = function(obj) {
-    var vals = [];
-    for (var k in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, k)) vals.push(obj[k]);
-    }
+    var vals = [], k;
+    for (k in obj) { if (Object.prototype.hasOwnProperty.call(obj,k)) vals.push(obj[k]); }
     return vals;
   };
 }
 
-/* ===== TEMPLATES ===== */
+/* ════════════════════════════════════════════════
+   TEMPLATES (auto-generated ES5, JSON-encoded)
+   ════════════════════════════════════════════════ */
 /* Template fill helper - replaces {key} with d[key] or '______' */
 function _fill(tpl, d) {
   return tpl.replace(/\{(\w+)\}/g, function(m, k) {
@@ -1300,233 +1437,366 @@ var TEMPLATES = {
 
 /* ===== END TEMPLATES ===== */
 
+/* ══════════════════════════════════
+   APP STATE
+   ══════════════════════════════════ */
 var CATS     = ['All','Criminal','Civil','Family','Corporate','Affidavits'];
-var CAT_ICON = {Criminal:'Law',Civil:'Court',Family:'Family',Corporate:'Corp',Affidavits:'Affid'};
-var CAT_EMO  = {Criminal:'\u2696\uFE0F',Civil:'\uD83C\uDFDB\uFE0F',Family:'\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC67',Corporate:'\uD83C\uDFE2',Affidavits:'\uD83D\uDCCB'};
+var CAT_EMO  = {Criminal:'⚖️',Civil:'🏛️',Family:'👨‍👩‍👧',Corporate:'🏢',Affidavits:'📋'};
 
-var curCat   = 'All';
-var curId    = null;
-var curLang  = 'English';
-var formData = {};
+var curCat      = 'All';
+var curId       = null;
+var curLang     = 'English';
+var formData    = {};
+var draftTab    = 'form';   // 'form' | 'preview'
+var mainTab     = 'templates'; // 'templates' | 'ai'
+var uploadedImg = null;
+var uploadedType= 'image/jpeg';
 
-function tmplList() {
-  var keys = Object.keys(TEMPLATES);
-  var arr  = [];
-  for (var i = 0; i < keys.length; i++) arr.push(TEMPLATES[keys[i]]);
+function el(id){ return document.getElementById(id); }
+
+function safeText(t){
+  return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function tmplList(){
+  var keys = Object.keys(TEMPLATES), arr = [], i;
+  for(i=0;i<keys.length;i++) arr.push(TEMPLATES[keys[i]]);
   return arr;
 }
 
-function el(id) { return document.getElementById(id); }
-
-function safeText(t) {
-  return String(t || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+/* ══ MAIN TAB SWITCH ══ */
+function switchMainTab(tab) {
+  mainTab = tab;
+  el('mtab-templates').className = 'mtab' + (tab==='templates'?' on':'');
+  el('mtab-ai').className        = 'mtab' + (tab==='ai'?' on':'');
+  el('templates-section').style.display = (tab==='templates') ? 'block' : 'none';
+  el('ai-section').style.display        = (tab==='ai')        ? 'block' : 'none';
+  if (tab==='ai') loadKeyStatus();
 }
 
-/* ===== BUILD HOME ===== */
-function buildHome() {
-  /* category bar */
-  var cb = el('cat-bar');
-  cb.innerHTML = '';
-  for (var ci = 0; ci < CATS.length; ci++) {
-    (function(c) {
-      var b = document.createElement('button');
-      b.className = 'cbtn' + (c === curCat ? ' on' : '');
-      b.textContent = c;
-      b.onclick = function() { curCat = c; buildHome(); };
-      cb.appendChild(b);
-    })(CATS[ci]);
+/* ══ DRAFTER MOBILE TABS ══ */
+function setDraftTab(tab) {
+  draftTab = tab;
+  el('dtab-form').className    = 'dtab' + (tab==='form'?' on':'');
+  el('dtab-preview').className = 'dtab' + (tab==='preview'?' on':'');
+  var w = window.innerWidth || document.documentElement.clientWidth;
+  if (w < 900) {
+    if (tab === 'form') {
+      el('sidebar').className     = '';
+      el('preview-pane').className= '';
+    } else {
+      el('sidebar').className     = 'mobile-hidden';
+      el('preview-pane').className= 'mobile-show';
+    }
   }
+}
 
-  /* cards */
+/* ══ BUILD HOME ══ */
+function buildHome() {
+  var cb = el('cat-bar'), b, i;
+  cb.innerHTML = '';
+  for (i=0;i<CATS.length;i++){
+    (function(c){
+      b = document.createElement('button');
+      b.className = 'cbtn'+(c===curCat?' on':'');
+      b.textContent = c;
+      b.onclick = function(){ curCat=c; buildHome(); };
+      cb.appendChild(b);
+    })(CATS[i]);
+  }
   var grid = el('card-grid');
   grid.innerHTML = '';
-  var all = tmplList();
-  var count = 0;
-  for (var ti = 0; ti < all.length; ti++) {
-    var t = all[ti];
-    if (curCat !== 'All' && t.category !== curCat) continue;
-    count++;
-    (function(tmpl) {
-      var d = document.createElement('div');
-      d.className = 'card c-' + tmpl.category;
-
-      var bar  = document.createElement('div');   bar.className  = 'cbar'; d.appendChild(bar);
-
-      var head = document.createElement('div');   head.className = 'chead';
-      var ico  = document.createElement('div');   ico.className  = 'cicon';
-      ico.textContent = CAT_EMO[tmpl.category] || '\uD83D\uDCC4';
-      var cat  = document.createElement('span');  cat.className  = 'ccat';
-      cat.textContent = tmpl.category;
-      head.appendChild(ico); head.appendChild(cat); d.appendChild(head);
-
-      var h3   = document.createElement('h3');
-      h3.textContent = tmpl.name;  d.appendChild(h3);
-
-      var p    = document.createElement('p');
-      p.textContent = tmpl.desc;   d.appendChild(p);
-
-      var langs = document.createElement('div');  langs.className = 'clang';
-      var en   = document.createElement('span');  en.className   = 'lb lb-en'; en.textContent = 'EN'; langs.appendChild(en);
-      var ur   = document.createElement('span');  ur.className   = 'lb lb-ur'; ur.textContent = 'UR'; langs.appendChild(ur);
+  var all = tmplList(), cnt=0, t;
+  for(i=0;i<all.length;i++){
+    t = all[i];
+    if(curCat!=='All' && t.category!==curCat) continue;
+    cnt++;
+    (function(tmpl){
+      var d   = document.createElement('div');   d.className = 'card c-'+tmpl.category;
+      var bar = document.createElement('div');   bar.className = 'cbar'; d.appendChild(bar);
+      var hd  = document.createElement('div');   hd.className  = 'chead';
+      var ico = document.createElement('div');   ico.className = 'cicon';
+      ico.textContent = CAT_EMO[tmpl.category]||'📄';
+      var cat = document.createElement('span');  cat.className = 'ccat'; cat.textContent = tmpl.category;
+      hd.appendChild(ico); hd.appendChild(cat); d.appendChild(hd);
+      var h3  = document.createElement('h3');    h3.textContent = tmpl.name; d.appendChild(h3);
+      var p   = document.createElement('p');     p.textContent  = tmpl.desc; d.appendChild(p);
+      var langs = document.createElement('div'); langs.className='clang';
+      var en  = document.createElement('span');  en.className='lb lb-en'; en.textContent='EN'; langs.appendChild(en);
+      var ur  = document.createElement('span');  ur.className='lb lb-ur'; ur.textContent='UR'; langs.appendChild(ur);
       d.appendChild(langs);
-
-      d.onclick = function() { openTemplate(tmpl.id); };
+      d.onclick = function(){ openTemplate(tmpl.id); };
       grid.appendChild(d);
     })(t);
   }
-
-  if (count === 0) {
-    grid.innerHTML = '<p style="color:#64748b;padding:20px">No templates in this category.</p>';
-  }
+  if(cnt===0){ grid.innerHTML='<p style="color:#64748b;padding:20px">No templates found.</p>'; }
 }
 
-/* ===== OPEN TEMPLATE ===== */
-function openTemplate(id) {
-  curId    = id;
-  curLang  = 'English';
-  formData = {};
-  el('home-wrap').style.display = 'none';
-  el('drafter').style.display   = 'flex';
-  el('btn-back').style.display  = 'block';
+/* ══ OPEN / BUILD DRAFTER ══ */
+function openTemplate(id){
+  curId=id; curLang='English'; formData={};
+  el('home-wrap').style.display  = 'none';
+  el('drafter').className        = 'active';
+  el('btn-back').style.display   = 'block';
+  setDraftTab('form');
   buildDrafter();
 }
 
-function buildDrafter() {
-  var tmpl  = TEMPLATES[curId];
-  var fmt   = tmpl.formats[curLang];
-  var isUrdu = (curLang === 'Urdu');
+function buildDrafter(){
+  var tmpl = TEMPLATES[curId];
+  var fmt  = tmpl.formats[curLang];
+  var isUr = (curLang==='Urdu');
 
   var badge = el('tmpl-badge');
-  badge.textContent = tmpl.category + ' \u00b7 ' + tmpl.type;
-  badge.className   = 'b-' + tmpl.category;
+  badge.textContent = tmpl.category+' · '+tmpl.type;
+  badge.className   = 'b-'+tmpl.category;
   el('tmpl-name').textContent = tmpl.name;
+  el('lbtn-en').className = 'lbtn'+(curLang==='English'?' on':'');
+  el('lbtn-ur').className = 'lbtn'+(curLang==='Urdu'?' on':'');
 
-  el('lbtn-en').className = 'lbtn' + (curLang === 'English' ? ' on' : '');
-  el('lbtn-ur').className = 'lbtn' + (curLang === 'Urdu'    ? ' on' : '');
-
-  /* form */
-  var fa = el('form-area');
+  var fa = el('form-area'), i, inp, wrap, lbl, input;
   fa.innerHTML = '';
-
-  for (var fi = 0; fi < fmt.inputs.length; fi++) {
-    (function(inp) {
-      var wrap = document.createElement('div');
-      wrap.className = 'field';
-
-      var lbl = document.createElement('label');
-      lbl.textContent = inp.label;
-      if (isUrdu) { lbl.style.direction = 'rtl'; lbl.style.textAlign = 'right'; }
+  for(i=0;i<fmt.inputs.length;i++){
+    (function(inp){
+      wrap = document.createElement('div'); wrap.className='field';
+      lbl  = document.createElement('label'); lbl.textContent=inp.label;
+      if(isUr){ lbl.style.direction='rtl'; lbl.style.textAlign='right'; }
       wrap.appendChild(lbl);
-
-      var input;
-      if (inp.type === 'textarea') {
-        input = document.createElement('textarea');
-        input.rows = 3;
-      } else {
-        input = document.createElement('input');
-        input.type = inp.type || 'text';
-      }
-      input.value = formData[inp.key] || '';
-      if (isUrdu) { input.style.direction = 'rtl'; input.style.textAlign = 'right'; }
-
-      input.oninput = function() {
-        formData[inp.key] = input.value;
-        refreshPreview();
-      };
-      wrap.appendChild(input);
-      fa.appendChild(wrap);
-    })(fmt.inputs[fi]);
+      if(inp.type==='textarea'){ input=document.createElement('textarea'); input.rows=3; }
+      else{ input=document.createElement('input'); input.type=inp.type||'text'; }
+      input.value = formData[inp.key]||'';
+      if(isUr){ input.style.direction='rtl'; input.style.textAlign='right'; }
+      input.oninput=(function(k){ return function(){ formData[k]=this.value; refreshPreview(); }; })(inp.key);
+      wrap.appendChild(input); fa.appendChild(wrap);
+    })(fmt.inputs[i]);
   }
 
-  /* checklist */
-  var cl = document.createElement('div');
-  cl.id = 'checklist';
-  var ct = document.createElement('div');
-  ct.className = 'chtitle';
-  ct.textContent = 'Required Documents';
+  var cl  = document.createElement('div'); cl.id='checklist';
+  var ct  = document.createElement('div'); ct.className='chtitle'; ct.textContent='Required Documents';
   cl.appendChild(ct);
-  var ul = document.createElement('ul');
-  for (var ci = 0; ci < fmt.checklist.length; ci++) {
-    var li = document.createElement('li');
-    li.textContent = fmt.checklist[ci];
-    ul.appendChild(li);
+  var ul  = document.createElement('ul'), li;
+  for(i=0;i<fmt.checklist.length;i++){
+    li=document.createElement('li'); li.textContent=fmt.checklist[i]; ul.appendChild(li);
   }
-  cl.appendChild(ul);
-  fa.appendChild(cl);
+  cl.appendChild(ul); fa.appendChild(cl);
 
   refreshPreview();
+  var pvl=el('pv-lang');
+  if(pvl){ pvl.textContent=curLang; pvl.style.background=isUr?'#dcfce7':'#dbeafe'; pvl.style.color=isUr?'#166534':'#1d4ed8'; }
+}
 
-  var pvl = el('pv-lang');
-  if (pvl) {
-    pvl.textContent    = curLang;
-    pvl.style.background = isUrdu ? '#dcfce7' : '#dbeafe';
-    pvl.style.color      = isUrdu ? '#166534' : '#1d4ed8';
+function refreshPreview(){
+  var text = TEMPLATES[curId].formats[curLang].generate(formData);
+  var dp   = el('doc-preview');
+  var isUr = (curLang==='Urdu');
+  if(dp){
+    dp.textContent   = text;
+    dp.style.fontFamily = isUr?'Tahoma,Arial,sans-serif':'Georgia,serif';
+    dp.style.direction  = isUr?'rtl':'ltr';
+    dp.style.textAlign  = isUr?'right':'left';
   }
 }
 
-function refreshPreview() {
-  var text  = TEMPLATES[curId].formats[curLang].generate(formData);
-  var dp    = el('doc-preview');
-  var isUrdu = (curLang === 'Urdu');
-  if (dp) {
-    dp.textContent    = text;
-    dp.style.fontFamily = isUrdu ? 'Tahoma,Arial,sans-serif' : 'Georgia,serif';
-    dp.style.direction  = isUrdu ? 'rtl' : 'ltr';
-    dp.style.textAlign  = isUrdu ? 'right' : 'left';
-  }
-}
-
-/* ===== DOWNLOADS ===== */
-el('btn-back').onclick = function() {
-  el('drafter').style.display   = 'none';
-  el('home-wrap').style.display = 'block';
-  el('btn-back').style.display  = 'none';
+/* ══ BACK BUTTON ══ */
+el('btn-back').onclick = function(){
+  el('drafter').className        = '';
+  el('home-wrap').style.display  = 'block';
+  el('btn-back').style.display   = 'none';
 };
 
-el('lbtn-en').onclick = function() { curLang = 'English'; formData = {}; buildDrafter(); };
-el('lbtn-ur').onclick = function() { curLang = 'Urdu';    formData = {}; buildDrafter(); };
+/* ══ LANGUAGE BUTTONS ══ */
+el('lbtn-en').onclick = function(){ curLang='English'; formData={}; buildDrafter(); };
+el('lbtn-ur').onclick = function(){ curLang='Urdu';    formData={}; buildDrafter(); };
 
-el('btn-word').onclick = function() {
-  var tmpl  = TEMPLATES[curId];
-  var text  = TEMPLATES[curId].formats[curLang].generate(formData);
-  var isUrdu = (curLang === 'Urdu');
-  var body  = safeText(text).replace(/\n/g, '<br/>');
-  var html  = '<html><head><meta charset="utf-8"><style>body{font-family:' +
-              (isUrdu ? 'Arial' : 'Times New Roman') +
-              ';font-size:12pt;direction:' + (isUrdu ? 'rtl' : 'ltr') + '}</style></head><body>' + body + '</body></html>';
-  var blob  = new Blob(['\uFEFF' + html], {type: 'application/msword'});
-  var a     = document.createElement('a');
-  a.href    = URL.createObjectURL(blob);
-  a.download = (tmpl.name || 'document').replace(/[^a-zA-Z0-9]/g, '_') + '_' + curLang + '.doc';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(a.href);
+/* ══ DOWNLOAD BUTTONS ══ */
+el('btn-word').onclick = function(){
+  var tmpl=TEMPLATES[curId], text=tmpl.formats[curLang].generate(formData), isUr=(curLang==='Urdu');
+  var body=safeText(text).replace(/\n/g,'<br/>');
+  var html='<html><head><meta charset="utf-8"><style>body{font-family:'+(isUr?'Arial':'Times New Roman')+';font-size:12pt;direction:'+(isUr?'rtl':'ltr')+'}</style></head><body>'+body+'</body></html>';
+  var blob=new Blob(['﻿'+html],{type:'application/msword'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=(tmpl.name||'document').replace(/[^a-zA-Z0-9]/g,'_')+'_'+curLang+'.doc';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
 };
 
-el('btn-pdf').onclick = function() {
-  var tmpl  = TEMPLATES[curId];
-  var text  = TEMPLATES[curId].formats[curLang].generate(formData);
-  var isUrdu = (curLang === 'Urdu');
-  var escaped = safeText(text);
-  var w = window.open('', '_blank');
-  if (!w) { alert('Allow pop-ups, then tap Print/PDF again.'); return; }
+el('btn-pdf').onclick = function(){
+  var tmpl=TEMPLATES[curId], text=tmpl.formats[curLang].generate(formData), isUr=(curLang==='Urdu');
+  var esc=safeText(text);
+  var w=window.open('','_blank');
+  if(!w){ alert('Allow pop-ups, then tap again.'); return; }
   w.document.open();
-  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + safeText(tmpl.name) + '</title>' +
-    '<style>@page{size:A4;margin:25mm}body{font-family:' + (isUrdu ? 'Arial,Tahoma' : 'Times New Roman,serif') + ';' +
-    'font-size:12pt;line-height:1.9;direction:' + (isUrdu ? 'rtl' : 'ltr') + ';white-space:pre-wrap;color:#000}</style>' +
-    '</head><body>' + escaped + '</body></html>');
+  w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+safeText(tmpl.name)+'</title>'+
+    '<style>@page{size:A4;margin:25mm}body{font-family:'+(isUr?'Arial,Tahoma':'Times New Roman,serif')+';font-size:12pt;line-height:1.9;direction:'+(isUr?'rtl':'ltr')+';white-space:pre-wrap;color:#000}</style>'+
+    '</head><body>'+esc+'</body></html>');
   w.document.close();
-  setTimeout(function() { w.print(); }, 800);
+  setTimeout(function(){ w.print(); },800);
 };
 
-/* ===== INIT ===== */
+/* ══════════════════════════════════
+   ARGUMENT ASSISTANT
+   ══════════════════════════════════ */
+var LEGAL_PROMPT = 'You are an expert Pakistani lawyer with 25+ years of experience in criminal, civil, and family law practice. You have thorough knowledge of Pakistan Penal Code 1860 (PPC), Code of Criminal Procedure 1898 (CrPC), Qanun-e-Shahadat Order 1984, Anti-Terrorism Act 1997, Control of Narcotic Substances Act 1997, Family Courts Act 1964, and leading Supreme Court and High Court precedents.\n\nAnalyze the provided legal document and give a structured response with exactly these headings:\n\n## DOCUMENT SUMMARY\nBriefly state what document this is and the key facts/allegations.\n\n## OFFENSES ALLEGED\nList each offense with the exact PPC or special law section number. For each offense state: (a) whether it is BAILABLE or NON-BAILABLE per Schedule II CrPC or the specific law, (b) maximum punishment, (c) whether cognizable or non-cognizable.\n\n## OVERALL BAIL STATUS\nState clearly: BAILABLE / NON-BAILABLE / DISCRETIONARY (with which court can grant bail and under which CrPC section: S.496, S.497, S.498, or S.561-A)\n\n## COURT JURISDICTION\nWhich court will try this case (First Class Magistrate / Sessions Court / Special Court / High Court). Cite the CrPC section or relevant law establishing jurisdiction. Note territorial jurisdiction.\n\n## DEFENSE ARGUMENTS (For Bail / Case)\nList 7-8 strong defense arguments, each citing a specific statute or leading case:\n- Constitutional rights (Articles 9, 10, 10-A of the Constitution of Pakistan 1973)\n- Bail jurisprudence from Supreme Court / High Courts (cite PLD / SCMR / PCrLJ citations)\n- Factual weaknesses\n- Procedural defects if any\n\n## PROSECUTION ARGUMENTS (Likely Opposition)\nList 4-5 arguments the prosecution will raise.\n\n## KEY LEGAL REFERENCES\nList all relevant PPC sections (with section headings), CrPC sections, and any leading Supreme Court or High Court judgments directly applicable to this matter. Use Pakistani legal citation format: PLD YYYY Court PageNo or YYYY SCMR PageNo.\n\nBe precise, authoritative, and thorough. Write in clear English as used in Pakistani superior courts.';
+
+function loadKeyStatus(){
+  var k = localStorage.getItem('pk_anth_key');
+  var s = el('key-status');
+  if(k && k.length > 10){
+    s.className='key-status ok';
+    s.textContent = 'API key saved (✓ ' + k.substring(0,12) + '...)';
+    el('api-key-input').value = k;
+  } else {
+    s.className='key-status';
+    s.textContent = 'No key saved. Enter your Anthropic API key above.';
+  }
+}
+
+function saveApiKey(){
+  var k = (el('api-key-input').value||'').trim();
+  if(!k){ alert('Please enter a valid API key.'); return; }
+  localStorage.setItem('pk_anth_key', k);
+  loadKeyStatus();
+}
+
+function toggleKeyVis(){
+  var inp = el('api-key-input');
+  inp.type = (inp.type==='password') ? 'text' : 'password';
+}
+
+function handleFileSelect(input){
+  if(!input.files||!input.files[0]) return;
+  var file = input.files[0];
+  uploadedType = file.type || 'image/jpeg';
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var data = e.target.result;
+    // data is "data:image/jpeg;base64,XXXXX"
+    uploadedImg = data.split(',')[1];
+    var preview = el('doc-img-preview');
+    preview.src = data;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function analyzeDocument(){
+  var key = (localStorage.getItem('pk_anth_key')||'').trim();
+  if(!key){ alert('Please enter and save your Anthropic API key first (in the Key section above).'); return; }
+
+  var text = (el('doc-text').value||'').trim();
+  if(!text && !uploadedImg){ alert('Please upload a document photo or paste document text.'); return; }
+
+  var btn = el('analyze-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+
+  el('ai-results').style.display  = 'block';
+  el('ai-results').className      = 'active';
+  el('ai-result-content').innerHTML = '<div class="ai-loading"><span class="spin">&#x231B;</span>Analyzing document with AI...<br><small>This may take 15-30 seconds</small></div>';
+
+  var content = [];
+  if(uploadedImg){
+    content.push({type:'image',source:{type:'base64',media_type:uploadedType,data:uploadedImg}});
+  }
+  content.push({type:'text',text: text ? 'Analyze this legal document:\n\n'+text : 'Analyze this legal document image. Extract all text and analyze it as a Pakistani legal expert.'});
+
+  var body = JSON.stringify({
+    model: 'claude-opus-4-8',
+    max_tokens: 4096,
+    system: LEGAL_PROMPT,
+    messages: [{role:'user', content: content}]
+  });
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: body
+  }).then(function(resp){
+    return resp.json();
+  }).then(function(data){
+    btn.disabled = false;
+    btn.innerHTML = '&#x1F50D; Analyze Document';
+    if(data.error){
+      showAIError(data.error.message || JSON.stringify(data.error));
+    } else if(data.content && data.content[0]){
+      displayAnalysis(data.content[0].text);
+    } else {
+      showAIError('Unexpected response from API: '+JSON.stringify(data));
+    }
+  }).catch(function(err){
+    btn.disabled = false;
+    btn.innerHTML = '&#x1F50D; Analyze Document';
+    showAIError('Network error: '+(err.message||String(err)));
+  });
+}
+
+function showAIError(msg){
+  el('ai-result-content').innerHTML = '<div class="ai-err">&#x26A0;&#xFE0F; Error: '+safeText(msg)+'</div>';
+}
+
+function displayAnalysis(text){
+  // Parse markdown-style sections and render nicely
+  var sections = [
+    {key:'DOCUMENT SUMMARY',       ico:'📄', bg:'#f0f9ff',  tc:'#0369a1'},
+    {key:'OFFENSES ALLEGED',       ico:'⚖️', bg:'#fff7ed',  tc:'#c2410c'},
+    {key:'OVERALL BAIL STATUS',    ico:'🔓', bg:'',         tc:''},
+    {key:'COURT JURISDICTION',     ico:'🏛️', bg:'#f5f3ff', tc:'#6d28d9'},
+    {key:'DEFENSE ARGUMENTS',      ico:'🛡️', bg:'#f0fdf4', tc:'#166534'},
+    {key:'PROSECUTION ARGUMENTS',  ico:'⚠️', bg:'#fef2f2',  tc:'#dc2626'},
+    {key:'KEY LEGAL REFERENCES',   ico:'📚', bg:'#f8fafc',  tc:'#475569'}
+  ];
+
+  var html = '';
+  var remaining = text;
+
+  for(var i=0;i<sections.length;i++){
+    var sec = sections[i];
+    // Find heading in text
+    var re = new RegExp('##\\s*'+sec.key.replace(/[()]/g,'\\$&')+'[\\s\\S]*?(?=##|$)', 'i');
+    var m = remaining.match(re);
+    if(!m) continue;
+    var body = m[0].replace(/^##[^\n]*\n*/,'').trim();
+
+    // Special bail status badge
+    var titleExtra = '';
+    if(sec.key==='OVERALL BAIL STATUS'){
+      var bailClass = 'bail-d', bailLabel = 'DISCRETIONARY';
+      if(/non[-\s]?bailable/i.test(body)){ bailClass='bail-nb'; bailLabel='NON-BAILABLE'; }
+      else if(/\bbailable\b/i.test(body)){ bailClass='bail-b'; bailLabel='BAILABLE'; }
+      titleExtra = ' <span class="badge-bail '+bailClass+'">'+bailLabel+'</span>';
+      sec.bg=''; sec.tc='#0f172a';
+    }
+
+    var bgStyle = sec.bg ? 'background:'+sec.bg+';' : 'background:#f8fafc;';
+    var tcStyle = sec.tc ? 'color:'+sec.tc+';' : 'color:#0f172a;';
+
+    html += '<div class="result-section">';
+    html += '<div class="rs-head" style="'+bgStyle+tcStyle+'">';
+    html += sec.ico+' '+sec.key+titleExtra;
+    html += '</div>';
+    html += '<div class="rs-body">'+safeText(body)+'</div>';
+    html += '</div>';
+  }
+
+  if(!html) {
+    // Fallback: show raw text
+    html = '<div class="result-section"><div class="rs-head" style="background:#f8fafc">&#x1F4CA; Analysis</div><div class="rs-body">'+safeText(text)+'</div></div>';
+  }
+
+  el('ai-result-content').innerHTML = html;
+}
+
+/* ══ INIT ══ */
 try {
   buildHome();
 } catch(e) {
-  var box = el('err-box');
-  box.style.display = 'block';
-  box.textContent = 'Init error: ' + e.message + '\n' + (e.stack || '');
+  var b = el('err-box');
+  b.style.display='block';
+  b.textContent='Init error: '+e.message+'\n'+(e.stack||'');
 }
 </script>
 </body>
