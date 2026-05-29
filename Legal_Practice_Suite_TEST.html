@@ -2,40 +2,99 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Legal Practice Suite – Test Build</title>
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Legal Practice Suite</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap');
-  .urdu-text { font-family: 'Noto Nastaliq Urdu', Arial, sans-serif; direction: rtl; text-align: right; }
-  .line-clamp-2 { display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+/* ── Navbar ── */
+.navbar{background:#0f172a;color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.navbar svg{color:#facc15;flex-shrink:0}
+.navbar h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.navbar p{font-size:11px;color:#94a3b8}
+.btn-back{margin-left:auto;background:#1e293b;border:none;color:#cbd5e1;font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btn-back:hover{color:#fff}
+/* ── Home ── */
+.home{padding:16px;max-width:1200px;margin:0 auto}
+.home-title{text-align:center;margin:12px 0 20px}
+.home-title h2{font-size:22px;font-weight:800;color:#1e293b}
+.home-title p{font-size:13px;color:#64748b;margin-top:4px}
+.cat-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
+.cat-btn{padding:7px 16px;border-radius:99px;border:1.5px solid #e2e8f0;background:#fff;font-size:13px;font-weight:700;color:#64748b;cursor:pointer;transition:.15s}
+.cat-btn.active{background:#0f172a;color:#fff;border-color:#0f172a;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:16px;cursor:pointer;position:relative;overflow:hidden;transition:.2s}
+.card:hover{box-shadow:0 8px 24px rgba(0,0,0,.1);transform:translateY(-2px)}
+.card-bar{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:2px 0 0 2px}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.card-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.card-cat{font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em}
+.card h3{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px;line-height:1.35}
+.card p{font-size:11px;color:#64748b;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-langs{display:flex;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid #f1f5f9}
+.lang-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+/* ── Drafter ── */
+.drafter{display:flex;flex-direction:column;height:calc(100vh - 54px)}
+@media(min-width:900px){.drafter{flex-direction:row}}
+.sidebar{background:#fff;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;width:100%;overflow:hidden}
+@media(min-width:900px){.sidebar{width:380px;flex-shrink:0}}
+.sidebar-head{padding:14px 16px;border-bottom:1px solid #f1f5f9}
+.tmpl-badge{display:inline-flex;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;margin-bottom:6px}
+.sidebar-head h2{font-size:17px;font-weight:700;line-height:1.3}
+.lang-toggle{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid #f1f5f9}
+.lang-btn{flex:1;padding:8px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+.lang-btn.active{background:#0f172a;color:#fff}
+.lang-btn:not(.active){background:#f1f5f9;color:#64748b}
+.form-body{flex:1;overflow-y:auto;padding:14px 16px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px}
+.field input,.field textarea{width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-size:13px;outline:none;font-family:inherit;background:#fafafa;transition:.15s}
+.field input:focus,.field textarea:focus{border-color:#3b82f6;background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.field textarea{resize:vertical;min-height:72px}
+.checklist{background:#fffbeb;border:1.5px solid #fcd34d;border-radius:10px;padding:12px;margin-top:6px}
+.checklist-title{font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.checklist li{font-size:12px;color:#78350f;margin-bottom:4px;padding-left:14px;position:relative;list-style:none}
+.checklist li::before{content:"✓";position:absolute;left:0;color:#d97706;font-weight:700}
+.action-bar{padding:12px 16px;border-top:1px solid #e2e8f0;display:flex;gap:8px}
+.btn{border:none;border-radius:9px;font-size:12px;font-weight:700;padding:9px 0;cursor:pointer;flex:1;transition:.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-pdf{background:#2563eb;color:#fff}.btn-pdf:hover{background:#1d4ed8}
+.btn-word{background:#059669;color:#fff}.btn-word:hover{background:#047857}
+.btn-print{background:#334155;color:#fff}.btn-print:hover{background:#1e293b}
+/* ── Preview ── */
+.preview-pane{display:none;flex:1;background:#e2e8f0;flex-direction:column;overflow:hidden}
+@media(min-width:900px){.preview-pane{display:flex}}
+.preview-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:9px 20px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#64748b}
+.preview-scroll{flex:1;overflow-y:auto;padding:24px}
+.preview-paper{max-width:760px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1);padding:48px 56px}
+#doc-preview{white-space:pre-wrap;line-height:1.9;font-size:13px;color:#1e293b}
+/* ── Urdu ── */
+.urdu .field label,.urdu .field input,.urdu .field textarea{direction:rtl;text-align:right;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+.urdu #doc-preview{direction:rtl;text-align:right;font-family:'Segoe UI',Tahoma,Arial,sans-serif}
+/* ── Colors ── */
+.Criminal .card-bar,.Criminal .cat-dot{background:#ef4444}
+.Criminal .card-icon{background:#fef2f2;color:#dc2626}
+.Civil    .card-bar,.Civil    .cat-dot{background:#3b82f6}
+.Civil    .card-icon{background:#eff6ff;color:#2563eb}
+.Family   .card-bar,.Family   .cat-dot{background:#ec4899}
+.Family   .card-icon{background:#fdf2f8;color:#db2777}
+.Corporate.card-bar,.Corporate.cat-dot{background:#10b981}
+.Corporate.card-icon{background:#ecfdf5;color:#059669}
+.Affidavits.card-bar,.Affidavits.cat-dot{background:#f59e0b}
+.Affidavits.card-icon{background:#fffbeb;color:#d97706}
+.Criminal  .tmpl-badge{background:#fef2f2;color:#dc2626}
+.Civil     .tmpl-badge{background:#eff6ff;color:#2563eb}
+.Family    .tmpl-badge{background:#fdf2f8;color:#db2777}
+.Corporate .tmpl-badge{background:#ecfdf5;color:#059669}
+.Affidavits.tmpl-badge{background:#fffbeb;color:#d97706}
+.lang-en{background:#dbeafe;color:#1d4ed8}
+.lang-ur{background:#dcfce7;color:#15803d}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel" data-presets="react">
-const { useState, useEffect } = React;
-const {
-  FileText, Download, Printer, Scale, Briefcase, PenTool,
-  ArrowLeft, Gavel, FileSignature, Building, ShieldAlert,
-  BookOpen, Languages, Eye, X, HeartHandshake, FileDown, CheckSquare
-} = LucideReact;
 
-import React, { useState, useEffect } from 'react';
-import { 
-  FileText, Download, Printer, CheckSquare, Scale, 
-  Briefcase, PenTool, ArrowLeft, Gavel, FileSignature, 
-  Building, ShieldAlert, BookOpen, Languages, Eye, X, 
-  HeartHandshake, FileDown
-} from 'lucide-react';
+<div id="app"></div>
 
-// --- TEMPLATE DATABASE ---
-
+<script>
 const TEMPLATES = {
   // ==============================
   // CATEGORY: CRIMINAL BAILS
@@ -1190,238 +1249,195 @@ const TEMPLATES = {
 };
 
 
-export default function App() {
-  const [view, setView] = useState('home');
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [selectedTemplateId, setSelectedTemplateId] = useState(null);
-  const [language, setLanguage] = useState('English');
-  const [formData, setFormData] = useState({});
-  const [preview, setPreview] = useState('');
+// ── Category icons (emoji for zero-dep) ──────────────────────────────────
+const CAT_ICON = {
+  Criminal:'⚖️', Civil:'🏛️', Family:'👨‍👩‍👧', Corporate:'🏢', Affidavits:'📋'
+};
 
-  const categories = ['All','Criminal','Civil','Family','Corporate','Affidavits'];
+// ── State ─────────────────────────────────────────────────────────────────
+let state = {
+  view: 'home',          // 'home' | 'drafter'
+  activeCategory: 'All',
+  selectedId: null,
+  language: 'English',
+  formData: {},
+  preview: ''
+};
 
-  const catColor = (cat, type='bg') => {
-    const map = {
-      Criminal:  {bg:'bg-red-500',    light:'bg-red-50 text-red-600'},
-      Civil:     {bg:'bg-blue-500',   light:'bg-blue-50 text-blue-600'},
-      Family:    {bg:'bg-pink-500',   light:'bg-pink-50 text-pink-600'},
-      Corporate: {bg:'bg-emerald-500',light:'bg-emerald-50 text-emerald-600'},
-      Affidavits:{bg:'bg-yellow-500', light:'bg-yellow-50 text-yellow-600'},
-    };
-    return (map[cat] || map.Affidavits)[type];
-  };
+function setState(patch){ Object.assign(state, patch); render(); }
 
-  const catIcon = (cat) => {
-    if(cat==='Criminal') return <ShieldAlert className="w-5 h-5"/>;
-    if(cat==='Civil')    return <Gavel className="w-5 h-5"/>;
-    if(cat==='Family')   return <HeartHandshake className="w-5 h-5"/>;
-    if(cat==='Corporate')return <Building className="w-5 h-5"/>;
-    return <FileSignature className="w-5 h-5"/>;
-  };
+// ── Helpers ───────────────────────────────────────────────────────────────
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  const selectTemplate = (id) => {
-    setSelectedTemplateId(id);
-    setLanguage('English');
-    setFormData({});
-    setPreview(TEMPLATES[id].formats.English.generate({}));
-    setView('drafter');
-  };
-
-  const switchLang = (lang) => {
-    setLanguage(lang);
-    setFormData({});
-    setPreview(TEMPLATES[selectedTemplateId].formats[lang].generate({}));
-  };
-
-  const handleInput = (key, val) => {
-    const d = {...formData, [key]: val};
-    setFormData(d);
-    setPreview(TEMPLATES[selectedTemplateId].formats[language].generate(d));
-  };
-
-  const downloadWord = () => {
-    const tmpl = TEMPLATES[selectedTemplateId];
-    const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:${language==='Urdu'?'Arial':'Times New Roman'};font-size:12pt;}</style></head><body style="direction:${language==='Urdu'?'rtl':'ltr'}">${preview.replace(/\n/g,'<br/>')}</body></html>`;
-    const blob = new Blob(['﻿',html],{type:'application/msword'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `${tmpl.name}_${language}.doc`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  };
-
-  const downloadPDF = () => {
-    const el = document.getElementById('doc-preview');
-    const tmpl = TEMPLATES[selectedTemplateId];
-    window.html2pdf().set({
-      margin:[25,25,25,25],
-      filename:`${tmpl.name}_${language}.pdf`,
-      html2canvas:{scale:2},
-      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
-    }).from(el).save();
-  };
-
-  const printDoc = () => {
-    const content = document.getElementById('doc-preview').innerHTML;
-    const w = window.open('','_blank');
-    w.document.write(`<html><head><style>body{font-family:${language==='Urdu'?'Arial':'Times New Roman'};font-size:12pt;white-space:pre-wrap;padding:40px;direction:${language==='Urdu'?'rtl':'ltr'}}</style></head><body>${content}</body></html>`);
-    w.document.close(); w.print();
-  };
-
-  if(view==='home') return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
-      <header className="bg-slate-900 text-white p-4 shadow-md flex items-center gap-3 sticky top-0 z-40">
-        <Scale className="w-8 h-8 text-yellow-400"/>
-        <div>
-          <h1 className="text-xl font-bold tracking-tight">Legal Practice Suite</h1>
-          <p className="text-xs text-slate-400">Ultimate Edition • 30+ Templates • Bilingual EN/UR</p>
-        </div>
-      </header>
-      <div className="p-6 max-w-7xl mx-auto w-full">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-slate-800 mb-2">Pakistani Legal Document Drafter</h2>
-          <p className="text-slate-500">Civil • Criminal • Family • Corporate • Affidavits — English & Urdu</p>
-        </div>
-        <div className="flex justify-center gap-2 mb-8 flex-wrap">
-          {categories.map(cat => (
-            <button key={cat} onClick={()=>setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory===cat?'bg-slate-800 text-white shadow-lg':'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
-              {cat}
-            </button>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {Object.values(TEMPLATES)
-            .filter(t => activeCategory==='All' || t.category===activeCategory)
-            .map(t => (
-            <div key={t.id} onClick={()=>selectTemplate(t.id)}
-              className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
-              <div className={`absolute top-0 left-0 w-1 h-full ${catColor(t.category,'bg')}`}></div>
-              <div className="flex items-center justify-between mb-3">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${catColor(t.category,'light')}`}>
-                  {catIcon(t.category)}
-                </div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.category}</span>
-              </div>
-              <h3 className="text-base font-bold text-slate-800 mb-1 group-hover:text-blue-700 transition-colors leading-tight">{t.name}</h3>
-              <p className="text-xs text-slate-500 mb-4 line-clamp-2">{t.desc}</p>
-              <div className="flex gap-2 pt-2 border-t border-slate-100">
-                <span className="text-[10px] px-2 py-1 bg-slate-100 rounded text-slate-600 font-semibold">EN</span>
-                <span className="text-[10px] px-2 py-1 bg-green-100 rounded text-green-700 font-semibold">UR</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-
-  const tmpl = TEMPLATES[selectedTemplateId];
-  const fmt  = tmpl.formats[language];
-  const isUrdu = language==='Urdu';
-
-  return (
-    <div className="flex flex-col h-screen bg-slate-50">
-      <header className="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <Scale className="w-7 h-7 text-yellow-400"/>
-          <div>
-            <h1 className="text-lg font-bold">Legal Practice Suite</h1>
-            <p className="text-xs text-slate-400">Document Drafter</p>
-          </div>
-        </div>
-        <button onClick={()=>setView('home')} className="flex items-center gap-2 text-sm text-slate-300 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg">
-          <ArrowLeft className="w-4 h-4"/> Main Menu
-        </button>
-      </header>
-
-      <div className="flex flex-1 overflow-hidden">
-        {/* SIDEBAR */}
-        <div className="w-full lg:w-2/5 xl:w-1/3 bg-white border-r border-slate-200 flex flex-col overflow-hidden">
-          <div className="p-5 border-b border-slate-100">
-            <div className={`inline-flex text-xs font-bold px-2 py-1 rounded mb-2 ${catColor(tmpl.category,'light')}`}>{tmpl.category} · {tmpl.type}</div>
-            <h2 className="text-xl font-bold text-slate-800 leading-tight">{tmpl.name}</h2>
-          </div>
-
-          {/* Language Toggle */}
-          <div className="flex gap-2 p-4 border-b border-slate-100">
-            {['English','Urdu'].map(l => (
-              <button key={l} onClick={()=>switchLang(l)}
-                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${language===l?'bg-slate-800 text-white':'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
-                {l==='English'?'🇬🇧 English':'🇵🇰 اردو'}
-              </button>
-            ))}
-          </div>
-
-          {/* Form Fields */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {fmt.inputs.map(inp => (
-              <div key={inp.key}>
-                <label className={`block text-xs font-semibold text-slate-500 mb-1 ${isUrdu?'text-right urdu-text':''}`}>{inp.label}</label>
-                {inp.type==='textarea'
-                  ? <textarea rows={3} value={formData[inp.key]||''} onChange={e=>handleInput(inp.key,e.target.value)}
-                      className={`w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none ${isUrdu?'text-right urdu-text':''}`}/>
-                  : <input type={inp.type} value={formData[inp.key]||''} onChange={e=>handleInput(inp.key,e.target.value)}
-                      className={`w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${isUrdu?'text-right urdu-text':''}`}/>
-                }
-              </div>
-            ))}
-
-            {/* Checklist */}
-            <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <CheckSquare className="w-4 h-4 text-amber-600"/>
-                <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">Required Documents</span>
-              </div>
-              <ul className="space-y-1">
-                {fmt.checklist.map((item,i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-amber-800">
-                    <span className="mt-0.5 text-amber-500">✓</span>
-                    <span className={isUrdu?'urdu-text text-right flex-1':''}>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Download Buttons */}
-          <div className="p-4 border-t border-slate-100 grid grid-cols-3 gap-2">
-            <button onClick={downloadPDF} className="flex items-center justify-center gap-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-2 rounded-lg transition-colors">
-              <FileDown className="w-3.5 h-3.5"/> PDF
-            </button>
-            <button onClick={downloadWord} className="flex items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-2 rounded-lg transition-colors">
-              <Download className="w-3.5 h-3.5"/> Word
-            </button>
-            <button onClick={printDoc} className="flex items-center justify-center gap-1 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold py-2 px-2 rounded-lg transition-colors">
-              <Printer className="w-3.5 h-3.5"/> Print
-            </button>
-          </div>
-        </div>
-
-        {/* PREVIEW */}
-        <div className="hidden lg:flex flex-1 flex-col bg-slate-100 overflow-hidden">
-          <div className="flex items-center gap-2 px-6 py-3 bg-white border-b border-slate-200">
-            <Eye className="w-4 h-4 text-slate-400"/>
-            <span className="text-sm font-semibold text-slate-600">Live Preview</span>
-            <span className={`ml-auto text-xs px-2 py-0.5 rounded font-bold ${isUrdu?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}`}>{language}</span>
-          </div>
-          <div className="flex-1 overflow-y-auto p-8">
-            <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-10">
-              <div id="doc-preview"
-                style={{fontFamily: isUrdu ? "'Noto Nastaliq Urdu', Arial" : "'Times New Roman', serif",
-                        direction: isUrdu?'rtl':'ltr', textAlign: isUrdu?'right':'left',
-                        whiteSpace:'pre-wrap', lineHeight:'1.9', fontSize:'13px', color:'#1e293b'}}>
-                {preview}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+function selectTemplate(id){
+  const preview = TEMPLATES[id].formats.English.generate({});
+  setState({ view:'drafter', selectedId:id, language:'English', formData:{}, preview });
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+function switchLang(lang){
+  const preview = TEMPLATES[state.selectedId].formats[lang].generate({});
+  setState({ language:lang, formData:{}, preview });
+}
+
+function handleInput(key,val){
+  state.formData[key] = val;
+  state.preview = TEMPLATES[state.selectedId].formats[state.language].generate(state.formData);
+  // Only update preview text, not re-render whole page (avoid losing focus)
+  const el = document.getElementById('doc-preview');
+  if(el) el.textContent = state.preview;
+}
+
+// ── Downloads ─────────────────────────────────────────────────────────────
+function downloadWord(){
+  const tmpl = TEMPLATES[state.selectedId];
+  const isUrdu = state.language==='Urdu';
+  const body = state.preview.replace(/\n/g,'<br/>');
+  const html = `<html><head><meta charset="utf-8"><style>body{font-family:${isUrdu?'Arial':'Times New Roman'};font-size:12pt;}</style></head><body style="direction:${isUrdu?'rtl':'ltr'}">${body}</body></html>`;
+  const blob = new Blob(['﻿'+html],{type:'application/msword'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${tmpl.name}_${state.language}.doc`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+function downloadPDF(){
+  const el = document.getElementById('doc-preview');
+  const tmpl = TEMPLATES[state.selectedId];
+  if(!el){ alert('Preview not ready'); return; }
+  const isUrdu = state.language==='Urdu';
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(tmpl.name)}</title>
+  <style>
+    @page{size:A4;margin:25mm}
+    body{font-family:${isUrdu?'Arial, Tahoma':'Times New Roman, serif'};font-size:12pt;line-height:1.9;direction:${isUrdu?'rtl':'ltr'};color:#000;white-space:pre-wrap}
+  </style></head><body>${esc(state.preview)}</body></html>`);
+  win.document.close();
+  setTimeout(()=>{ win.print(); win.close(); }, 600);
+}
+
+function printDoc(){
+  const tmpl = TEMPLATES[state.selectedId];
+  const isUrdu = state.language==='Urdu';
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${esc(tmpl.name)}</title>
+  <style>body{font-family:${isUrdu?'Arial':'Times New Roman'};font-size:12pt;line-height:1.9;padding:30px;direction:${isUrdu?'rtl':'ltr'};white-space:pre-wrap}</style>
+  </head><body>${esc(state.preview)}</body></html>`);
+  win.document.close();
+  setTimeout(()=>{ win.print(); win.close(); }, 400);
+}
+
+// ── Render ────────────────────────────────────────────────────────────────
+const CATEGORIES = ['All','Criminal','Civil','Family','Corporate','Affidavits'];
+
+function renderHome(){
+  const items = Object.values(TEMPLATES)
+    .filter(t => state.activeCategory==='All' || t.category===state.activeCategory);
+
+  const catBtns = CATEGORIES.map(c =>
+    `<button class="cat-btn ${state.activeCategory===c?'active':''}" onclick="setState({activeCategory:'${c'}})">
+      ${c==='All'?'All':CAT_ICON[c]+' '+c}
+    </button>`
+  ).join('');
+
+  const cards = items.map(t =>
+    `<div class="card ${t.category}" onclick="selectTemplate('${t.id}')">
+      <div class="card-bar"></div>
+      <div class="card-head">
+        <div class="card-icon">${CAT_ICON[t.category]||'📄'}</div>
+        <span class="card-cat">${esc(t.category)}</span>
+      </div>
+      <h3>${esc(t.name)}</h3>
+      <p>${esc(t.desc)}</p>
+      <div class="card-langs">
+        <span class="lang-badge lang-en">EN</span>
+        <span class="lang-badge lang-ur">UR</span>
+      </div>
+    </div>`
+  ).join('');
+
+  return `
+  <nav class="navbar">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12L5 7M12 12L19 7M5 7V17L12 22M19 7V17L12 22M5 7L12 2L19 7"/></svg>
+    <div><h1>Legal Practice Suite</h1><p>Ultimate Edition • 32 Templates • Bilingual</p></div>
+  </nav>
+  <div class="home">
+    <div class="home-title">
+      <h2>Pakistani Legal Document Drafter</h2>
+      <p>Civil • Criminal • Family • Corporate • Affidavits — English &amp; Urdu</p>
+    </div>
+    <div class="cat-bar">${catBtns}</div>
+    <div class="cards">${cards}</div>
+  </div>`;
+}
+
+function renderDrafter(){
+  const tmpl = TEMPLATES[state.selectedId];
+  const fmt  = tmpl.formats[state.language];
+  const isUrdu = state.language==='Urdu';
+
+  const fields = fmt.inputs.map(inp => {
+    const val = esc(state.formData[inp.key]||'');
+    if(inp.type==='textarea'){
+      return `<div class="field"><label>${esc(inp.label)}</label>
+        <textarea oninput="handleInput('${inp.key}',this.value)">${val}</textarea></div>`;
+    }
+    return `<div class="field"><label>${esc(inp.label)}</label>
+      <input type="${inp.type}" value="${val}" oninput="handleInput('${inp.key}',this.value)"/></div>`;
+  }).join('');
+
+  const checks = fmt.checklist.map(item =>
+    `<li>${esc(item)}</li>`
+  ).join('');
+
+  const preview = esc(state.preview);
+
+  return `
+  <nav class="navbar">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12L5 7M12 12L19 7M5 7V17L12 22M19 7V17L12 22M5 7L12 2L19 7"/></svg>
+    <div><h1>Legal Practice Suite</h1><p>Document Drafter</p></div>
+    <button class="btn-back" onclick="setState({view:'home'})">← Menu</button>
+  </nav>
+  <div class="drafter ${isUrdu?'urdu':''}">
+    <div class="sidebar">
+      <div class="sidebar-head">
+        <span class="tmpl-badge ${tmpl.category}">${esc(tmpl.category)} · ${esc(tmpl.type)}</span>
+        <h2>${esc(tmpl.name)}</h2>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn ${state.language==='English'?'active':''}" onclick="switchLang('English')">🇬🇧 English</button>
+        <button class="lang-btn ${state.language==='Urdu'?'active':''}" onclick="switchLang('Urdu')">🇵🇰 اردو</button>
+      </div>
+      <div class="form-body">
+        ${fields}
+        <div class="checklist">
+          <div class="checklist-title">📎 Required Documents</div>
+          <ul>${checks}</ul>
+        </div>
+      </div>
+      <div class="action-bar">
+        <button class="btn btn-pdf" onclick="downloadPDF()">🖨 PDF</button>
+        <button class="btn btn-word" onclick="downloadWord()">💾 Word</button>
+        <button class="btn btn-print" onclick="printDoc()">🖨️ Print</button>
+      </div>
+    </div>
+    <div class="preview-pane">
+      <div class="preview-bar">👁 Live Preview <span style="margin-left:auto;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px" class="${isUrdu?'lang-ur':'lang-en'}">${state.language}</span></div>
+      <div class="preview-scroll">
+        <div class="preview-paper">
+          <div id="doc-preview" style="font-family:${isUrdu?"'Segoe UI',Arial":"'Times New Roman',serif"};direction:${isUrdu?'rtl':'ltr'};text-align:${isUrdu?'right':'left'}">${preview}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render(){
+  document.getElementById('app').innerHTML =
+    state.view==='home' ? renderHome() : renderDrafter();
+}
+
+render();
 </script>
 </body>
 </html>
