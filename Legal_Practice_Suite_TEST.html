@@ -1,4 +1,31 @@
-```react
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Legal Practice Suite – Test Build</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap');
+  .urdu-text { font-family: 'Noto Nastaliq Urdu', Arial, sans-serif; direction: rtl; text-align: right; }
+  .line-clamp-2 { display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect } = React;
+const {
+  FileText, Download, Printer, Scale, Briefcase, PenTool,
+  ArrowLeft, Gavel, FileSignature, Building, ShieldAlert,
+  BookOpen, Languages, Eye, X, HeartHandshake, FileDown, CheckSquare
+} = LucideReact;
+
 import React, { useState, useEffect } from 'react';
 import { 
   FileText, Download, Printer, CheckSquare, Scale, 
@@ -1162,200 +1189,239 @@ const TEMPLATES = {
   }
 };
 
-export default function LegalSuiteProMax() {
+
+export default function App() {
   const [view, setView] = useState('home');
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
   const [language, setLanguage] = useState('English');
   const [formData, setFormData] = useState({});
   const [preview, setPreview] = useState('');
-  const [showPrintPreview, setShowPrintPreview] = useState(false);
-  const [pdfLibLoaded, setPdfLibLoaded] = useState(false);
 
-  // Load html2pdf script dynamically
-  useEffect(() => {
-    if (!document.getElementById('html2pdf-script')) {
-      const script = document.createElement('script');
-      script.id = 'html2pdf-script';
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.onload = () => setPdfLibLoaded(true);
-      document.body.appendChild(script);
-    } else {
-      setPdfLibLoaded(true);
-    }
-  }, []);
+  const categories = ['All','Criminal','Civil','Family','Corporate','Affidavits'];
 
-  // --- HELPERS ---
-  const categories = ['All', 'Criminal', 'Civil', 'Family', 'Corporate', 'Affidavits'];
+  const catColor = (cat, type='bg') => {
+    const map = {
+      Criminal:  {bg:'bg-red-500',    light:'bg-red-50 text-red-600'},
+      Civil:     {bg:'bg-blue-500',   light:'bg-blue-50 text-blue-600'},
+      Family:    {bg:'bg-pink-500',   light:'bg-pink-50 text-pink-600'},
+      Corporate: {bg:'bg-emerald-500',light:'bg-emerald-50 text-emerald-600'},
+      Affidavits:{bg:'bg-yellow-500', light:'bg-yellow-50 text-yellow-600'},
+    };
+    return (map[cat] || map.Affidavits)[type];
+  };
 
-  const handleTemplateSelect = (id) => {
+  const catIcon = (cat) => {
+    if(cat==='Criminal') return <ShieldAlert className="w-5 h-5"/>;
+    if(cat==='Civil')    return <Gavel className="w-5 h-5"/>;
+    if(cat==='Family')   return <HeartHandshake className="w-5 h-5"/>;
+    if(cat==='Corporate')return <Building className="w-5 h-5"/>;
+    return <FileSignature className="w-5 h-5"/>;
+  };
+
+  const selectTemplate = (id) => {
     setSelectedTemplateId(id);
-    setLanguage('English'); 
+    setLanguage('English');
     setFormData({});
     setPreview(TEMPLATES[id].formats.English.generate({}));
     setView('drafter');
   };
 
-  const handleLanguageSwitch = (lang) => {
+  const switchLang = (lang) => {
     setLanguage(lang);
     setFormData({});
     setPreview(TEMPLATES[selectedTemplateId].formats[lang].generate({}));
   };
 
-  const handleInputChange = (key, value) => {
-    const newData = { ...formData, [key]: value };
-    setFormData(newData);
-    setPreview(TEMPLATES[selectedTemplateId].formats[language].generate(newData));
+  const handleInput = (key, val) => {
+    const d = {...formData, [key]: val};
+    setFormData(d);
+    setPreview(TEMPLATES[selectedTemplateId].formats[language].generate(d));
   };
 
-  // --- DOWNLOAD HANDLERS ---
-  
-  // 1. FIXED WORD DOWNLOAD
-  const handleDownloadWord = () => {
+  const downloadWord = () => {
     const tmpl = TEMPLATES[selectedTemplateId];
-    // Create HTML structure for Word
-    const htmlContent = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head>
-        <meta charset='utf-8'>
-        <title>${tmpl.name}</title>
-        <style>
-          body { font-family: ${language === 'Urdu' ? 'Arial' : 'Times New Roman'}; font-size: 12pt; }
-        </style>
-      </head>
-      <body style="direction: ${language === 'Urdu' ? 'rtl' : 'ltr'}">
-        ${preview.replace(/\n/g, "<br/>")}
-      </body>
-      </html>
-    `;
-
-    // Create Blob
-    const blob = new Blob(['\ufeff', htmlContent], {
-      type: 'application/msword'
-    });
-
-    // Trigger Download
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = href;
-    link.download = `${tmpl.name}_${language}.doc`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(href);
+    const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><style>body{font-family:${language==='Urdu'?'Arial':'Times New Roman'};font-size:12pt;}</style></head><body style="direction:${language==='Urdu'?'rtl':'ltr'}">${preview.replace(/\n/g,'<br/>')}</body></html>`;
+    const blob = new Blob(['﻿',html],{type:'application/msword'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${tmpl.name}_${language}.doc`;
+    a.click();
+    URL.revokeObjectURL(a.href);
   };
 
-  // 2. NEW PDF DOWNLOAD
-  const handleDownloadPDF = () => {
-    if (!pdfLibLoaded || !window.html2pdf) {
-      alert("PDF Engine Loading... Please try again in 3 seconds.");
-      return;
-    }
-    
-    const element = document.getElementById('document-preview-content');
+  const downloadPDF = () => {
+    const el = document.getElementById('doc-preview');
     const tmpl = TEMPLATES[selectedTemplateId];
-    
-    const opt = {
-      margin: [25, 25, 25, 25], // mm
-      filename: `${tmpl.name}_${language}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    window.html2pdf().set(opt).from(element).save();
+    window.html2pdf().set({
+      margin:[25,25,25,25],
+      filename:`${tmpl.name}_${language}.pdf`,
+      html2canvas:{scale:2},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+    }).from(el).save();
   };
 
-  // --- HOME SCREEN ---
-  const HomeScreen = () => (
-    <div className="p-6 max-w-7xl mx-auto animate-in fade-in duration-500">
-      <div className="text-center mb-10">
-        <h2 className="text-4xl font-extrabold text-slate-800 mb-3">Legal Practice Suite</h2>
-        <p className="text-slate-500">Ultimate Edition • Civil, Criminal, Family & Corporate • Bilingual</p>
-      </div>
+  const printDoc = () => {
+    const content = document.getElementById('doc-preview').innerHTML;
+    const w = window.open('','_blank');
+    w.document.write(`<html><head><style>body{font-family:${language==='Urdu'?'Arial':'Times New Roman'};font-size:12pt;white-space:pre-wrap;padding:40px;direction:${language==='Urdu'?'rtl':'ltr'}}</style></head><body>${content}</body></html>`);
+    w.document.close(); w.print();
+  };
 
-      <div className="flex justify-center gap-2 mb-8 flex-wrap">
-        {categories.map(cat => (
-          <button 
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory === cat ? 'bg-slate-800 text-white shadow-lg' : 'bg-white text-slate-500 hover:bg-slate-100'}`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {Object.values(TEMPLATES)
-          .filter(t => activeCategory === 'All' || t.category === activeCategory)
-          .map((t) => (
-          <div key={t.id} onClick={() => handleTemplateSelect(t.id)} className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
-            <div className={`absolute top-0 left-0 w-1 h-full ${
-              t.category === 'Criminal' ? 'bg-red-500' : 
-              t.category === 'Civil' ? 'bg-blue-500' : 
-              t.category === 'Family' ? 'bg-pink-500' :
-              t.category === 'Corporate' ? 'bg-emerald-500' : 'bg-yellow-500'
-            }`}></div>
-            
-            <div className="flex items-center justify-between mb-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                t.category === 'Criminal' ? 'bg-red-50 text-red-600' : 
-                t.category === 'Civil' ? 'bg-blue-50 text-blue-600' : 
-                t.category === 'Family' ? 'bg-pink-50 text-pink-600' :
-                t.category === 'Corporate' ? 'bg-emerald-50 text-emerald-600' : 'bg-yellow-50 text-yellow-600'
-              }`}>
-                {t.category === 'Criminal' ? <ShieldAlert className="w-5 h-5" /> : 
-                 t.category === 'Civil' ? <Gavel className="w-5 h-5" /> :
-                 t.category === 'Family' ? <HeartHandshake className="w-5 h-5" /> :
-                 t.category === 'Corporate' ? <Building className="w-5 h-5" /> : <FileSignature className="w-5 h-5" />}
+  if(view==='home') return (
+    <div className="flex flex-col min-h-screen bg-slate-50">
+      <header className="bg-slate-900 text-white p-4 shadow-md flex items-center gap-3 sticky top-0 z-40">
+        <Scale className="w-8 h-8 text-yellow-400"/>
+        <div>
+          <h1 className="text-xl font-bold tracking-tight">Legal Practice Suite</h1>
+          <p className="text-xs text-slate-400">Ultimate Edition • 30+ Templates • Bilingual EN/UR</p>
+        </div>
+      </header>
+      <div className="p-6 max-w-7xl mx-auto w-full">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-extrabold text-slate-800 mb-2">Pakistani Legal Document Drafter</h2>
+          <p className="text-slate-500">Civil • Criminal • Family • Corporate • Affidavits — English & Urdu</p>
+        </div>
+        <div className="flex justify-center gap-2 mb-8 flex-wrap">
+          {categories.map(cat => (
+            <button key={cat} onClick={()=>setActiveCategory(cat)}
+              className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${activeCategory===cat?'bg-slate-800 text-white shadow-lg':'bg-white text-slate-500 hover:bg-slate-100 border border-slate-200'}`}>
+              {cat}
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {Object.values(TEMPLATES)
+            .filter(t => activeCategory==='All' || t.category===activeCategory)
+            .map(t => (
+            <div key={t.id} onClick={()=>selectTemplate(t.id)}
+              className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden">
+              <div className={`absolute top-0 left-0 w-1 h-full ${catColor(t.category,'bg')}`}></div>
+              <div className="flex items-center justify-between mb-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${catColor(t.category,'light')}`}>
+                  {catIcon(t.category)}
+                </div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.category}</span>
               </div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.category}</span>
+              <h3 className="text-base font-bold text-slate-800 mb-1 group-hover:text-blue-700 transition-colors leading-tight">{t.name}</h3>
+              <p className="text-xs text-slate-500 mb-4 line-clamp-2">{t.desc}</p>
+              <div className="flex gap-2 pt-2 border-t border-slate-100">
+                <span className="text-[10px] px-2 py-1 bg-slate-100 rounded text-slate-600 font-semibold">EN</span>
+                <span className="text-[10px] px-2 py-1 bg-green-100 rounded text-green-700 font-semibold">UR</span>
+              </div>
             </div>
-            
-            <h3 className="text-lg font-bold text-slate-800 mb-1 group-hover:text-blue-700 transition-colors leading-tight">{t.name}</h3>
-            <p className="text-xs text-slate-500 mb-4 line-clamp-2">{t.desc}</p>
-            
-            <div className="flex gap-2 mt-auto pt-2 border-t border-slate-50">
-               <span className="text-[10px] px-2 py-1 bg-slate-100 rounded text-slate-600 font-semibold">EN</span>
-               <span className="text-[10px] px-2 py-1 bg-green-100 rounded text-green-700 font-serif font-semibold">UR</span>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
 
+  const tmpl = TEMPLATES[selectedTemplateId];
+  const fmt  = tmpl.formats[language];
+  const isUrdu = language==='Urdu';
+
   return (
-    <div className="flex flex-col h-screen bg-slate-50 text-slate-900 font-sans">
-      
-      {/* Navbar */}
+    <div className="flex flex-col h-screen bg-slate-50">
       <header className="bg-slate-900 text-white p-4 shadow-md flex justify-between items-center sticky top-0 z-40">
         <div className="flex items-center gap-3">
-          <Scale className="w-8 h-8 text-yellow-500" />
+          <Scale className="w-7 h-7 text-yellow-400"/>
           <div>
-            <h1 className="text-xl font-bold tracking-tight">Legal Practice Suite</h1>
-            <p className="text-xs text-slate-400">Pro Max Edition</p>
+            <h1 className="text-lg font-bold">Legal Practice Suite</h1>
+            <p className="text-xs text-slate-400">Document Drafter</p>
           </div>
         </div>
-        {view === 'drafter' && (
-          <button onClick={() => setView('home')} className="flex items-center gap-2 text-sm text-slate-300 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Main Menu
-          </button>
-        )}
+        <button onClick={()=>setView('home')} className="flex items-center gap-2 text-sm text-slate-300 hover:text-white bg-slate-800 px-3 py-1.5 rounded-lg">
+          <ArrowLeft className="w-4 h-4"/> Main Menu
+        </button>
       </header>
 
-      {/* Body */}
-      <div className="flex-1 overflow-y-auto">
-        {view === 'home' ? <HomeScreen /> : (
-          /* DRAFTER VIEW */
-          <div className="flex flex-col lg:flex-row h-full">
-            
-            {/* Sidebar */}
-            <div className="w-full lg:w-1/3 bg-white border-r border-slate-200 p-6 overflow-y-auto shadow-lg z-10">
-              <div className="mb-6 pb-4 border-b border-slate-100">
-                <h2 className="text-2xl font-bold text-slate-800">{TEMPLATES[selectedTemplateId].name}</h2>
-              </div>
+      <div className="flex flex-1 overflow-hidden">
+        {/* SIDEBAR */}
+        <div className="w-full lg:w-2/5 xl:w-1/3 bg-white border-r border-slate-200 flex flex-col overflow-hidden">
+          <div className="p-5 border-b border-slate-100">
+            <div className={`inline-flex text-xs font-bold px-2 py-1 rounded mb-2 ${catColor(tmpl.category,'light')}`}>{tmpl.category} · {tmpl.type}</div>
+            <h2 className="text-xl font-bold text-slate-800 leading-tight">{tmpl.name}</h2>
+          </div>
 
-              {/* Language Toggle */}
-              <div clas
+          {/* Language Toggle */}
+          <div className="flex gap-2 p-4 border-b border-slate-100">
+            {['English','Urdu'].map(l => (
+              <button key={l} onClick={()=>switchLang(l)}
+                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${language===l?'bg-slate-800 text-white':'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
+                {l==='English'?'🇬🇧 English':'🇵🇰 اردو'}
+              </button>
+            ))}
+          </div>
+
+          {/* Form Fields */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {fmt.inputs.map(inp => (
+              <div key={inp.key}>
+                <label className={`block text-xs font-semibold text-slate-500 mb-1 ${isUrdu?'text-right urdu-text':''}`}>{inp.label}</label>
+                {inp.type==='textarea'
+                  ? <textarea rows={3} value={formData[inp.key]||''} onChange={e=>handleInput(inp.key,e.target.value)}
+                      className={`w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none ${isUrdu?'text-right urdu-text':''}`}/>
+                  : <input type={inp.type} value={formData[inp.key]||''} onChange={e=>handleInput(inp.key,e.target.value)}
+                      className={`w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${isUrdu?'text-right urdu-text':''}`}/>
+                }
+              </div>
+            ))}
+
+            {/* Checklist */}
+            <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <CheckSquare className="w-4 h-4 text-amber-600"/>
+                <span className="text-xs font-bold text-amber-700 uppercase tracking-wide">Required Documents</span>
+              </div>
+              <ul className="space-y-1">
+                {fmt.checklist.map((item,i) => (
+                  <li key={i} className="flex items-start gap-2 text-xs text-amber-800">
+                    <span className="mt-0.5 text-amber-500">✓</span>
+                    <span className={isUrdu?'urdu-text text-right flex-1':''}>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Download Buttons */}
+          <div className="p-4 border-t border-slate-100 grid grid-cols-3 gap-2">
+            <button onClick={downloadPDF} className="flex items-center justify-center gap-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-2 rounded-lg transition-colors">
+              <FileDown className="w-3.5 h-3.5"/> PDF
+            </button>
+            <button onClick={downloadWord} className="flex items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-2 rounded-lg transition-colors">
+              <Download className="w-3.5 h-3.5"/> Word
+            </button>
+            <button onClick={printDoc} className="flex items-center justify-center gap-1 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold py-2 px-2 rounded-lg transition-colors">
+              <Printer className="w-3.5 h-3.5"/> Print
+            </button>
+          </div>
+        </div>
+
+        {/* PREVIEW */}
+        <div className="hidden lg:flex flex-1 flex-col bg-slate-100 overflow-hidden">
+          <div className="flex items-center gap-2 px-6 py-3 bg-white border-b border-slate-200">
+            <Eye className="w-4 h-4 text-slate-400"/>
+            <span className="text-sm font-semibold text-slate-600">Live Preview</span>
+            <span className={`ml-auto text-xs px-2 py-0.5 rounded font-bold ${isUrdu?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}`}>{language}</span>
+          </div>
+          <div className="flex-1 overflow-y-auto p-8">
+            <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-10">
+              <div id="doc-preview"
+                style={{fontFamily: isUrdu ? "'Noto Nastaliq Urdu', Arial" : "'Times New Roman', serif",
+                        direction: isUrdu?'rtl':'ltr', textAlign: isUrdu?'right':'left',
+                        whiteSpace:'pre-wrap', lineHeight:'1.9', fontSize:'13px', color:'#1e293b'}}>
+                {preview}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
