@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Practice Suite – Pakistan (Adalat Online Enterprise Edition)</title>
+    <title>Legal Practice Suite – (Adalat Online Matrix Edition)</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -25,7 +25,6 @@
             font-family: 'Times New Roman', Times, serif;
             line-height: 1.6;
         }
-        /* Custom UI Scrollbar styling */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -51,7 +50,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-amber-400 bg-clip-text text-transparent">Legal Practice Suite</h1>
-                <p class="text-xs text-slate-400 font-medium tracking-wider">PAKISTAN JURISPRUDENCE WORKSTATION • ADALAT ONLINE MATRICES</p>
+                <p class="text-xs text-slate-400 font-medium tracking-wider">COURT PLEADINGS ENGINE • INTEGRATED STATUTORY WORKFLOWS</p>
             </div>
         </div>
         <div id="nav-actions" class="hidden flex items-center gap-3">
@@ -67,14 +66,14 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                 <div>
                     <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Integrated Drafting Directory</h2>
-                    <p class="text-sm text-slate-500 mt-1">Select an optimized template matching standard common law structures used in Pakistani subordinate courts.</p>
+                    <p class="text-sm text-slate-500 mt-1">Select an optimized template matching standard common law structures used in subordinate courts.</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
                     <button onclick="injectDemoData('specific_performance')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5">
                         <i class="fa-solid fa-file-contract"></i> Demo: Specific Performance
                     </button>
                     <button onclick="injectDemoData('ejectment_petition')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5">
-                        <i class="fa-solid fa-house-chimney-user"></i> Demo: Punjab Ejectment
+                        <i class="fa-solid fa-house-chimney-user"></i> Demo: Ejectment Petition
                     </button>
                     <button onclick="injectDemoData('execution_petition')" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1.5">
                         <i class="fa-solid fa-gavel"></i> Demo: Decree Execution
@@ -129,7 +128,7 @@
                     <i class="fa-solid fa-user-tie text-amber-500 text-base"></i>
                     <div>
                         <p class="font-semibold text-slate-200">Signatory: Julian Vane</p>
-                        <p class="text-[10px] text-slate-500">Advocate High Court Strategy Module</p>
+                        <p class="text-[10px] text-slate-500">Legal Strategist Module</p>
                     </div>
                 </div>
             </div>
@@ -149,7 +148,7 @@
                         <input type="checkbox" id="opt-append-vakat" onchange="recompileDocumentPreview()" class="w-4 h-4 rounded text-slate-900 accent-slate-900 border-slate-300">
                         <div class="text-xs">
                             <span class="font-bold block text-slate-800">Auto-Append Vakalatnama</span>
-                            <span class="text-slate-400 text-[10px]">Generate professional vakalatnama form pages</span>
+                            <span class="text-slate-400 text-[10px]">Generate professional power of attorney pages</span>
                         </div>
                     </label>
                 </div>
@@ -159,7 +158,7 @@
                 <div class="bg-white border-b border-slate-200 p-4 flex justify-between items-center shadow-sm z-10 shrink-0">
                     <div class="flex items-center gap-2">
                         <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-xs font-bold text-slate-600 tracking-wider uppercase">Live Legal Page Renderer</span>
+                        <span class="text-xs font-bold text-slate-600 tracking-wider uppercase">Live Document Page Renderer</span>
                     </div>
                     <div class="flex items-center gap-3">
                         <button onclick="triggerPrint()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-sm cursor-pointer">
@@ -199,18 +198,18 @@
             specific_performance: {
                 id: 'specific_performance', category: 'Civil', type: 'Civil Plaint',
                 name: 'Suit for Specific Performance & Permanent Injunction',
-                desc: 'Adalat Online compliant plaint seeking specific contractual enforcement of land sale matrices, managing earnest payments.',
+                desc: 'Complaint seeking specific contractual enforcement of land sale matrices, managing earnest payments.',
                 formats: {
                     English: {
                         inputs: [
-                            { key: 'district', label: 'District / Court Venue', type: 'text' },
+                            { key: 'court_title', label: 'Court Title Designator', type: 'text' },
                             { key: 'plaintiff_name', label: 'Plaintiff Name', type: 'text' },
                             { key: 'plaintiff_father', label: 'Plaintiff Father\'s Name', type: 'text' },
                             { key: 'plaintiff_address', label: 'Plaintiff Address Residence', type: 'textarea' },
                             { key: 'defendant_name', label: 'Defendant Name', type: 'text' },
                             { key: 'defendant_father', label: 'Defendant Father\'s Name', type: 'text' },
                             { key: 'defendant_address', label: 'Defendant Address Residence', type: 'textarea' },
-                            { key: 'property_size', label: 'Property Size (e.g., 10 Marlas)', type: 'text' },
+                            { key: 'property_size', label: 'Property Size (e.g., 10-Marlas)', type: 'text' },
                             { key: 'property_details', label: 'Property Identifiers (Khewat, Khatooni, Location)', type: 'textarea' },
                             { key: 'total_consideration', label: 'Total Agreed Sale Price (PKR)', type: 'text' },
                             { key: 'earnest_money', label: 'Earnest Money Paid (Bayana) (PKR)', type: 'text' },
@@ -218,10 +217,10 @@
                             { key: 'agreement_date', label: 'Agreement Date (Iqrarenama)', type: 'text' },
                             { key: 'target_date', label: 'Agreed Sale Deed Target Date', type: 'text' }
                         ],
-                        checklist: ['Agreement to Sell (Iqrarenama)', 'Token Receipt of Earnest Money', 'Fard Malkiyat / Revenue Record', 'Copy of CNIC of the Plaintiff', 'Executed Vakalatnama'],
+                        checklist: ['Agreement to Sell (Iqrarenama)', 'Token Receipt of Earnest Money', 'Fard Malkiyat / Revenue Record', 'Copy of Identity Documents', 'Executed Vakalatnama'],
                         generate: (d) => `
 <div class="font-serif leading-relaxed text-justify whitespace-pre-wrap">
-IN THE COURT OF THE LEARNED SENIOR CIVIL JUDGE, ${d.district?.toUpperCase() || 'LAHORE'}.
+IN THE COURT OF THE LEARNED ${d.court_title?.toUpperCase() || 'SENIOR CIVIL JUDGE'}, LAHORE.
 
 Civil Suit No: _____________________/2026
 
@@ -232,41 +231,41 @@ ${d.plaintiff_name || '___'} S/O ${d.plaintiff_father || '___'} R/O ${d.plaintif
 ${d.defendant_name || '___'} S/O ${d.defendant_father || '___'} R/O ${d.defendant_address || '___'}.
                                                      .... DEFENDANT
 
-<b><u>SUIT FOR SPECIFIC PERFORMANCE OF AGREEMENT TO SELL DATED ${d.agreement_date || '___'} AND PERMANENT INJUNCTION</u></b>
+<b><u>SUIT FOR SPECIFIC PERFORMANCE WITH PERMANENT INJUNCTION</u></b>
 ───────────────────────────────────────────────────────────────────────────────────
 
-Respectfully Sheweth:
+Respectfully Sheweth,
 
-1. That the defendant is the owner of property measuring ${d.property_size || '___'} situated at ${d.property_details || '___'} (hereinafter called 'Suit Property'). Copy of Fard Malkiyat is attached as Annexure-A.
+That the brief facts giving rise to the filing of the instant suit are as under:
 
-2. That on ${d.agreement_date || '___'}, the plaintiff purchased the suit property from the defendant for a total consideration of Rs. ${d.total_consideration || '___'}/-, and paid an amount of Rs. ${d.earnest_money || '___'}/- as earnest money/token money to the defendant in the presence of marginal witnesses. In this regard, the parties entered into an agreement dated ${d.agreement_date || '___'}. A copy of the agreement/token receipt is attached herewith as Annexure-B.
+1. That the defendant is the owner of a land measuring ${d.property_size || '10-Marlas'} bearing ${d.property_details || 'Khewat No. __, Khatooni No. __'} (hereinafter called 'Suit Property'). Copy of Fard Malkiyat is attached as Annexure-A for the kind perusal of this Honorable Court.
 
-3. That at the time of execution of the agreement, it was mutually agreed between the parties that the plaintiff would pay the remaining balance amount of Rs. ${d.balance_money || '___'}/- on or before ${d.target_date || '___'}, upon which the defendant would execute the registered sale deed of the above-mentioned suit property in favor of the plaintiff and also hand over peaceful physical possession.
+2. That on ${d.agreement_date || '___'}, the plaintiff purchased the above-mentioned suit property for a total consideration of Rs. ${d.total_consideration || '5,00,00,000/-'}, and paid an amount of Rs. ${d.earnest_money || '1,00,00,000/-'} as earnest money/token money to the defendant in the presence of marginal witnesses. In this regard, the parties entered into an agreement dated ${d.agreement_date || '___'}. A copy of the agreement/token receipt is attached herewith as Annexure-B.
 
-4. That the plaintiff has always been, and is still, ready and willing to perform his part of the contract by paying the remaining balance amount, but the defendant has failed to perform his contractual obligation and is now trying to alienate the property to third parties.
+3. That at the time of execution of the agreement, it was mutually agreed between the parties that the plaintiff would pay the remaining amount of Rs. ${d.balance_money || '4,00,00,000/-'} on or before ${d.target_date || '___'}, upon which the defendant would execute the sale deed of the above-mentioned suit property in favor of the plaintiff and also hand over possession of the property.
 
-5. That the cause of action accrued first on ${d.agreement_date || '___'} when the agreement was executed, and recently when the defendant refused to perform his obligation.
+4. That the plaintiff has always been, and is still, ready and willing to perform his part of the contract, but the defendant has turned dishonest and is planning to transfer the suit property to third parties.
 
-6. That the suit property is situated in ${d.district || 'Lahore'}, hence this court has jurisdiction to try the matter.
+5. That the cause of action accrued first on ${d.agreement_date || '___'} and remains continuous, and the property is located within the administrative bounds of this court.
 
 <b><u>P R A Y E R:</u></b>
 
-It is, therefore, most respectfully prayed that this Honourable Court may graciously be pleased to pass a decree for specific performance of the agreement to sell in favor of the plaintiff and against the defendant, directing the defendant to execute the sale deed after receiving the balance consideration. 
+It is, therefore, most respectfully prayed that this Honorable Court may graciously be pleased to pass a decree for specific performance of the agreement to sell in favor of the plaintiff and against the defendant, directing the defendant to execute the sale deed after receiving the balance consideration. 
 
 It is further prayed that a decree for permanent injunction be passed in favor of the plaintiff, restraining the defendant from selling, alienating, or transferring the suit property to any other person.
 
 Plaintiff
 Through Counsel
 <b>Julian Vane</b>
-Advocate High Court
+Legal Strategist
 
 <b>Verification:</b>
-Verified on oath at ${d.district || 'Lahore'} on this ${d.date_today || getFormattedTodayDate()} that the contents of this petition from paragraphs 1 to 4 are correct to the best of my knowledge and paragraph 5 to 6 from legal information received.
+Verified on oath at venue on this ${d.date_today || getFormattedTodayDate()} that the contents of paragraphs 1 to 4 are correct to the best of my knowledge and paragraph 5 is true as per professional legal counsel files.
 </div>`
                     },
                     Urdu: {
                         inputs: [
-                            { key: 'district', label: 'ضلع / مقام', type: 'text' },
+                            { key: 'court_title', label: 'عدالت کا نام / عہدہ', type: 'text' },
                             { key: 'plaintiff_name', label: 'نام مدعی / سائل', type: 'text' },
                             { key: 'plaintiff_father', label: 'والد کا نام', type: 'text' },
                             { key: 'plaintiff_address', label: 'پتہ مدعی', type: 'textarea' },
@@ -284,7 +283,7 @@ Verified on oath at ${d.district || 'Lahore'} on this ${d.date_today || getForma
                         checklist: ['اصل اقرارنامہ بیع (معاہدہ بیع)', 'رسیدِ بیعانہ / ٹوکن منی', 'فرد ملکیت ریونیو ریکارڈ', 'نقل شناختی کارڈ مدعی', 'وکالت نامہ'],
                         generate: (d) => `
 <div class="urdu-text">
-بمقام عدالت جناب معزز سینئر سول جج صاحب، ${d.district || 'لاہور'}۔
+بمقام عدالت جناب معزز ${d.court_title || 'سینئر سول جج صاحب'}۔
 
 دیوانی مقدمہ نمبر ____________ / 2026
 
@@ -296,4 +295,8 @@ ${d.defendant_name || '___'} ولد ${d.defendant_father || '___'} ساکن ${d.
                                                      ۔۔۔مدعا علیہ
 
 <b><u>دعویٰ تعمیلِ مختص معاہدہ بیع مورخہ ${d.agreement_date || '___'} مع دعویٰ حکم امتناعی دوامی۔</u></b>
-───────────────
+───────────────────────────────────────────────────────────────────────────────────
+
+گزارشِ احوال حسبِ ذیل ہے:
+
+۱۔ یہ کہ مدعا علیہ جائیداد رقبہ ${d.property_size || '___'} واقع ${d.property_details || '___'} کا مالک و ق
