@@ -1,5 +1,5 @@
-/* Legal Practice Suite – Service Worker v2 */
-var CACHE = 'legal-suite-v2';
+/* Legal Practice Suite – Service Worker v3 */
+var CACHE = 'legal-suite-v3';
 var APP_FILES = [
   './index.html',
   './manifest.json',
