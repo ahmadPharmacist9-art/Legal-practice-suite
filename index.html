@@ -1925,12 +1925,30 @@ var AUTH_AQ_KEY     = 'pk_auth_aq';
 var AUTH_SESSION    = 'pk_session';
 var AUTH_TIMEOUT_MS = 8 * 60 * 60 * 1000; /* 8 hours */
 
-/* Simple async SHA-256 via SubtleCrypto (available in all modern browsers) */
+/* Pure-JS sync hash — no crypto.subtle needed, works on all Android browsers */
 function sha256(str) {
-  var buf = new TextEncoder().encode(str);
-  return crypto.subtle.digest('SHA-256', buf).then(function(hash) {
-    return Array.from(new Uint8Array(hash)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-  });
+  function _mix(s, seed) {
+    var h1 = seed ^ 0xdeadbeef, h2 = seed ^ 0x41c6ce57;
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      h1 = Math.imul(h1 ^ c, 2654435761);
+      h2 = Math.imul(h2 ^ c, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    var lo = (h1 >>> 0).toString(16), hi = (h2 >>> 0).toString(16);
+    while (lo.length < 8) lo = '0' + lo;
+    while (hi.length < 8) hi = '0' + hi;
+    return lo + hi;
+  }
+  var salts = ['pkLegal!', 'Auth#2025', 'Suit$Salt', 'Case@Key', 'Law%Hash'];
+  var out = '';
+  for (var i = 0; i < salts.length; i++) out += _mix(salts[i] + str + i, i * 0x9e3779b9);
+  out += _mix(str + out, 0xc0ffee);
+  out += _mix(out + str, 0xfacade);
+  var result = out.slice(0, 64);
+  /* Return thenable so existing .then() call sites work unchanged */
+  return { then: function(fn) { fn(result); return { then: function(){}, catch: function(){} }; } };
 }
 
 function authEl(id){ return document.getElementById(id); }
@@ -2009,14 +2027,16 @@ function authDoLogin(){
   var pass = authEl('login-pass').value;
   if(!pass){ authShowErr('login-err','Please enter your password.'); return; }
   authHideErr('login-err');
-  sha256(pass).then(function(hash){
-    if(hash === localStorage.getItem(AUTH_PASS_KEY)){
-      authEl('login-pass').value='';
-      authGrantAccess();
-    } else {
-      authShowErr('login-err','Incorrect password. Try again or use Forgot Password.');
-    }
-  });
+  try {
+    var hash = sha256(pass).then(function(hash){
+      if(hash === localStorage.getItem(AUTH_PASS_KEY)){
+        authEl('login-pass').value='';
+        authGrantAccess();
+      } else {
+        authShowErr('login-err','Incorrect password. Try again or use Forgot Password.');
+      }
+    });
+  } catch(e) { authShowErr('login-err','Error: '+e.message); }
 }
 
 function authDoSetup(){
