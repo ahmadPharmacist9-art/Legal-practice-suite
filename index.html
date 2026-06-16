@@ -274,7 +274,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <button class="auth-eye" onclick="authToggleEye('login-pass',this)" tabindex="-1">&#x1F441;</button>
       </div>
       <button class="auth-btn" onclick="authDoLogin()">Unlock App</button>
-      <div class="auth-link"><a onclick="authShow('forgot-1')">Forgot password?</a></div>
+      <div class="auth-link"><a onclick="authShow('forgot-1')">Forgot password?</a> &nbsp;|&nbsp; <a onclick="authEmergencyReset()" style="color:#94a3b8">Reset App</a></div>
     </div>
 
     <!-- PANEL: Setup (first time) -->
@@ -1919,203 +1919,205 @@ window.addEventListener('appinstalled',function(){el('pwa-banner').style.display
      pk_session     – timestamp of last successful login
    Session valid for 8 hours
    ══════════════════════════════════ */
-var AUTH_PASS_KEY   = 'pk_auth_hash';
-var AUTH_Q_KEY      = 'pk_auth_q';
-var AUTH_AQ_KEY     = 'pk_auth_aq';
-var AUTH_SESSION    = 'pk_session';
-var AUTH_TIMEOUT_MS = 8 * 60 * 60 * 1000; /* 8 hours */
+var AUTH_PASS_KEY   = 'pk_auth_v4';
+var AUTH_Q_KEY      = 'pk_auth_q4';
+var AUTH_AQ_KEY     = 'pk_auth_aq4';
+var AUTH_SESSION    = 'pk_session4';
+var AUTH_TIMEOUT_MS = 8 * 60 * 60 * 1000;
 
-/* Pure-JS sync hash — no crypto.subtle needed, works on all Android browsers */
-function sha256(str) {
-  function _mix(s, seed) {
-    var h1 = seed ^ 0xdeadbeef, h2 = seed ^ 0x41c6ce57;
-    for (var i = 0; i < s.length; i++) {
-      var c = s.charCodeAt(i);
-      h1 = Math.imul(h1 ^ c, 2654435761);
-      h2 = Math.imul(h2 ^ c, 1597334677);
-    }
-    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-    var lo = (h1 >>> 0).toString(16), hi = (h2 >>> 0).toString(16);
-    while (lo.length < 8) lo = '0' + lo;
-    while (hi.length < 8) hi = '0' + hi;
-    return lo + hi;
+/* ── Pure JS hash: no Math.imul, no crypto.subtle, works on all Android ── */
+function pkHash(str) {
+  var s = 'pkLegal:' + str + ':suite';
+  var h1 = 0, h2 = 0x5a827999, h3 = 0x6ed9eba1, h4 = 0x8f1bbcdc;
+  for (var i = 0; i < s.length; i++) {
+    var c = s.charCodeAt(i);
+    h1 = (((h1 << 5) - h1) + c) | 0;
+    h2 = (((h2 << 7) + h2) ^ c) | 0;
+    h3 = (((h3 << 3) - h3) + (c * 31)) | 0;
+    h4 = (((h4 << 11) ^ h4) + c) | 0;
   }
-  var salts = ['pkLegal!', 'Auth#2025', 'Suit$Salt', 'Case@Key', 'Law%Hash'];
-  var out = '';
-  for (var i = 0; i < salts.length; i++) out += _mix(salts[i] + str + i, i * 0x9e3779b9);
-  out += _mix(str + out, 0xc0ffee);
-  out += _mix(out + str, 0xfacade);
-  var result = out.slice(0, 64);
-  /* Return thenable so existing .then() call sites work unchanged */
-  return { then: function(fn) { fn(result); return { then: function(){}, catch: function(){} }; } };
+  /* second pass reversed */
+  for (var i = s.length - 1; i >= 0; i--) {
+    var c = s.charCodeAt(i);
+    h1 = (h1 ^ (h2 + c)) | 0;
+    h2 = (h2 + (h3 ^ c)) | 0;
+    h3 = (h3 ^ (h4 - c)) | 0;
+    h4 = (h4 - (h1 ^ c)) | 0;
+  }
+  function u32hex(n) {
+    var x = (n >>> 0).toString(16);
+    while (x.length < 8) x = '0' + x;
+    return x;
+  }
+  return u32hex(h1) + u32hex(h2) + u32hex(h3) + u32hex(h4) +
+         u32hex(h1 ^ h4) + u32hex(h2 ^ h3) + u32hex(h1 + h3) + u32hex(h2 + h4);
 }
 
 function authEl(id){ return document.getElementById(id); }
 
 function authShow(panel) {
   var panels = ['login','setup','forgot-1','forgot-2'];
-  for(var i=0;i<panels.length;i++){
-    var p = authEl('auth-panel-'+panels[i]);
-    if(p) p.className = 'auth-panel' + (panels[i]===panel ? ' active' : '');
+  for (var i = 0; i < panels.length; i++) {
+    var p = authEl('auth-panel-' + panels[i]);
+    if (p) p.className = 'auth-panel' + (panels[i] === panel ? ' active' : '');
   }
-  /* populate the security question on forgot panel */
-  if(panel==='forgot-1'){
-    var q = localStorage.getItem(AUTH_Q_KEY)||'Security Question';
+  if (panel === 'forgot-1') {
+    var q = localStorage.getItem(AUTH_Q_KEY) || 'Your Security Question';
     authEl('forgot-q-label').textContent = q;
-    authEl('forgot1-err').style.display='none';
-    authEl('forgot1-ok').style.display='none';
-    authEl('forgot-answer').value='';
+    authEl('forgot1-err').style.display = 'none';
+    authEl('forgot1-ok').style.display = 'none';
+    authEl('forgot-answer').value = '';
   }
 }
 
 function authToggleEye(inputId, btn) {
   var inp = authEl(inputId);
-  if(inp.type==='password'){ inp.type='text'; btn.style.opacity='1'; }
-  else { inp.type='password'; btn.style.opacity='.5'; }
+  if (inp.type === 'password') { inp.type = 'text'; btn.style.opacity = '1'; }
+  else { inp.type = 'password'; btn.style.opacity = '.5'; }
 }
 
 function authPassStrength(val) {
-  var bar = authEl('strength-bar');
-  var hint = authEl('strength-hint');
-  var score = 0;
-  if(val.length>=6) score++;
-  if(val.length>=10) score++;
-  if(/[A-Z]/.test(val)) score++;
-  if(/[0-9]/.test(val)) score++;
-  if(/[^A-Za-z0-9]/.test(val)) score++;
+  var bar = authEl('strength-bar'), hint = authEl('strength-hint'), score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
   var colors = ['#ef4444','#f97316','#eab308','#22c55e','#16a34a'];
   var labels = ['Very Weak','Weak','Fair','Strong','Very Strong'];
-  bar.style.width = (score*20)+'%';
-  bar.style.background = colors[score-1]||'#334155';
-  hint.textContent = val.length>0 ? labels[score-1]||'' : '';
+  bar.style.width = (score * 20) + '%';
+  bar.style.background = colors[score - 1] || '#334155';
+  hint.textContent = val.length > 0 ? (labels[score - 1] || '') : '';
 }
 
-function authShowErr(id, msg){
-  var el=authEl(id); el.textContent=msg; el.style.display='block';
+function authShowErr(id, msg) {
+  var e = authEl(id); if (!e) return;
+  e.textContent = msg; e.style.display = 'block';
 }
-function authHideErr(id){ authEl(id).style.display='none'; }
-
-function authCheckSession(){
-  var ts = parseInt(localStorage.getItem(AUTH_SESSION)||'0',10);
-  return (Date.now()-ts) < AUTH_TIMEOUT_MS;
+function authHideErr(id) {
+  var e = authEl(id); if (e) e.style.display = 'none';
 }
 
-function authGrantAccess(){
+function authCheckSession() {
+  var ts = parseInt(localStorage.getItem(AUTH_SESSION) || '0', 10);
+  return (Date.now() - ts) < AUTH_TIMEOUT_MS;
+}
+
+function authGrantAccess() {
   localStorage.setItem(AUTH_SESSION, String(Date.now()));
-  authEl('auth-overlay').style.display='none';
+  var ov = authEl('auth-overlay');
+  if (ov) ov.style.display = 'none';
 }
 
-function authInit(){
-  var hasPass = !!localStorage.getItem(AUTH_PASS_KEY);
-  if(!hasPass){
-    /* First launch — show setup */
+function authClearAll() {
+  localStorage.removeItem(AUTH_PASS_KEY);
+  localStorage.removeItem(AUTH_Q_KEY);
+  localStorage.removeItem(AUTH_AQ_KEY);
+  localStorage.removeItem(AUTH_SESSION);
+}
+
+function authInit() {
+  var stored = localStorage.getItem(AUTH_PASS_KEY);
+  if (!stored || stored.length !== 64) {
+    /* No password set yet, or stale hash from old version — start fresh */
+    authClearAll();
     authShow('setup');
     return;
   }
-  if(authCheckSession()){
-    /* Valid session — skip login */
+  if (authCheckSession()) {
     authGrantAccess();
     return;
   }
   authShow('login');
-  /* focus after short delay (keyboard on mobile) */
-  setTimeout(function(){ var p=authEl('login-pass'); if(p)p.focus(); },300);
+  setTimeout(function() { var p = authEl('login-pass'); if (p) p.focus(); }, 400);
 }
 
-function authDoLogin(){
+function authDoLogin() {
   var pass = authEl('login-pass').value;
-  if(!pass){ authShowErr('login-err','Please enter your password.'); return; }
+  if (!pass) { authShowErr('login-err', 'Please enter your password.'); return; }
   authHideErr('login-err');
-  try {
-    var hash = sha256(pass).then(function(hash){
-      if(hash === localStorage.getItem(AUTH_PASS_KEY)){
-        authEl('login-pass').value='';
-        authGrantAccess();
-      } else {
-        authShowErr('login-err','Incorrect password. Try again or use Forgot Password.');
-      }
-    });
-  } catch(e) { authShowErr('login-err','Error: '+e.message); }
+  var hash = pkHash(pass);
+  if (hash === localStorage.getItem(AUTH_PASS_KEY)) {
+    authEl('login-pass').value = '';
+    authGrantAccess();
+  } else {
+    authShowErr('login-err', 'Incorrect password. Try again or tap Forgot Password.');
+  }
 }
 
-function authDoSetup(){
+function authDoSetup() {
   var p1 = authEl('setup-pass1').value;
   var p2 = authEl('setup-pass2').value;
   var q  = authEl('setup-question').value;
   var a  = authEl('setup-answer').value.trim();
   authHideErr('setup-err');
-  if(p1.length<6){ authShowErr('setup-err','Password must be at least 6 characters.'); return; }
-  if(p1!==p2){ authShowErr('setup-err','Passwords do not match.'); return; }
-  if(!q){ authShowErr('setup-err','Please select a security question.'); return; }
-  if(!a){ authShowErr('setup-err','Please provide an answer to the security question.'); return; }
-  sha256(p1).then(function(ph){
-    return sha256(a.toLowerCase()).then(function(ah){
-      localStorage.setItem(AUTH_PASS_KEY, ph);
-      localStorage.setItem(AUTH_Q_KEY, q);
-      localStorage.setItem(AUTH_AQ_KEY, ah);
-      authEl('setup-pass1').value='';
-      authEl('setup-pass2').value='';
-      authEl('setup-answer').value='';
-      authGrantAccess();
-    });
-  });
+  if (p1.length < 6) { authShowErr('setup-err', 'Password must be at least 6 characters.'); return; }
+  if (p1 !== p2)     { authShowErr('setup-err', 'Passwords do not match.'); return; }
+  if (!q)            { authShowErr('setup-err', 'Please select a security question.'); return; }
+  if (!a)            { authShowErr('setup-err', 'Please provide an answer to the security question.'); return; }
+  localStorage.setItem(AUTH_PASS_KEY, pkHash(p1));
+  localStorage.setItem(AUTH_Q_KEY, q);
+  localStorage.setItem(AUTH_AQ_KEY, pkHash(a.toLowerCase()));
+  authEl('setup-pass1').value = '';
+  authEl('setup-pass2').value = '';
+  authEl('setup-answer').value = '';
+  authGrantAccess();
 }
 
-function authVerifyAnswer(){
+function authVerifyAnswer() {
   var ans = authEl('forgot-answer').value.trim();
   authHideErr('forgot1-err');
-  authEl('forgot1-ok').style.display='none';
-  if(!ans){ authShowErr('forgot1-err','Please enter your answer.'); return; }
-  sha256(ans.toLowerCase()).then(function(ah){
-    if(ah === localStorage.getItem(AUTH_AQ_KEY)){
-      authEl('forgot1-ok').textContent='Answer verified! Set your new password.';
-      authEl('forgot1-ok').style.display='block';
-      setTimeout(function(){ authShow('forgot-2'); },800);
-    } else {
-      authShowErr('forgot1-err','Incorrect answer. Please try again.');
-    }
-  });
+  authEl('forgot1-ok').style.display = 'none';
+  if (!ans) { authShowErr('forgot1-err', 'Please enter your answer.'); return; }
+  if (pkHash(ans.toLowerCase()) === localStorage.getItem(AUTH_AQ_KEY)) {
+    authEl('forgot1-ok').textContent = 'Answer verified! Set your new password.';
+    authEl('forgot1-ok').style.display = 'block';
+    setTimeout(function() { authShow('forgot-2'); }, 700);
+  } else {
+    authShowErr('forgot1-err', 'Incorrect answer. Please try again.');
+  }
 }
 
-function authDoReset(){
+function authDoReset() {
   var p1 = authEl('forgot-pass1').value;
   var p2 = authEl('forgot-pass2').value;
   authHideErr('forgot2-err');
-  if(p1.length<6){ authShowErr('forgot2-err','Password must be at least 6 characters.'); return; }
-  if(p1!==p2){ authShowErr('forgot2-err','Passwords do not match.'); return; }
-  sha256(p1).then(function(ph){
-    localStorage.setItem(AUTH_PASS_KEY, ph);
-    authEl('forgot-pass1').value='';
-    authEl('forgot-pass2').value='';
-    authGrantAccess();
-  });
+  if (p1.length < 6) { authShowErr('forgot2-err', 'Password must be at least 6 characters.'); return; }
+  if (p1 !== p2)     { authShowErr('forgot2-err', 'Passwords do not match.'); return; }
+  localStorage.setItem(AUTH_PASS_KEY, pkHash(p1));
+  authEl('forgot-pass1').value = '';
+  authEl('forgot-pass2').value = '';
+  authGrantAccess();
 }
 
-/* Allow Enter key on password fields */
-document.addEventListener('keydown', function(e){
-  if(e.key!=='Enter') return;
+/* Emergency full reset — shown as link on login screen */
+function authEmergencyReset() {
+  if (confirm('This will clear your saved password and security question. You will need to set a new password. Continue?')) {
+    authClearAll();
+    authShow('setup');
+  }
+}
+
+/* Enter key submits active panel */
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
   var panel = document.querySelector('.auth-panel.active');
-  if(!panel) return;
+  if (!panel) return;
   var id = panel.id;
-  if(id==='auth-panel-login') authDoLogin();
-  else if(id==='auth-panel-setup') authDoSetup();
-  else if(id==='auth-panel-forgot-1') authVerifyAnswer();
-  else if(id==='auth-panel-forgot-2') authDoReset();
+  if (id === 'auth-panel-login')    authDoLogin();
+  else if (id === 'auth-panel-setup')    authDoSetup();
+  else if (id === 'auth-panel-forgot-1') authVerifyAnswer();
+  else if (id === 'auth-panel-forgot-2') authDoReset();
 });
 
-/* Boot auth */
+/* Boot */
 authInit();
 
-/* Change password helper (can be called from settings) */
-function authChangePassword(){
-  localStorage.removeItem(AUTH_PASS_KEY);
-  localStorage.removeItem(AUTH_Q_KEY);
-  localStorage.removeItem(AUTH_AQ_KEY);
-  localStorage.removeItem(AUTH_SESSION);
+function authChangePassword() {
+  authClearAll();
   authShow('setup');
-  authEl('auth-overlay').style.display='-webkit-flex';
-  authEl('auth-overlay').style.display='flex';
+  var ov = authEl('auth-overlay');
+  if (ov) { ov.style.display = '-webkit-flex'; ov.style.display = 'flex'; }
 }
 
 /* ── Register Service Worker ── */
