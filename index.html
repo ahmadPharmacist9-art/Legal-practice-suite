@@ -583,20 +583,30 @@ var TEMPLATES = {
     category: 'Criminal',
     type: 'Bail',
     name: 'Post-Arrest Bail (S. 497)',
-    desc: 'Application for release after arrest.',
+    desc: 'Petition under Section 497 CrPC for grant of post-arrest bail.',
     formats: {
       English: {
         inputs: [
           { key: 'court', label: 'Court Name', type: 'text' },
+          { key: 'ps_court', label: 'PS / Location of Court', type: 'text' },
+          { key: 'ba_no', label: 'B.A. Number', type: 'text' },
+          { key: 'year', label: 'Year', type: 'text' },
           { key: 'petitioner', label: 'Petitioner Name', type: 'text' },
+          { key: 'father', label: 'Father / Husband Name (S/o or W/o)', type: 'text' },
           { key: 'caste', label: 'Caste', type: 'text' },
-          { key: 'accused', label: 'Accused Name (if diff)', type: 'text' },
-          { key: 'fir', label: 'FIR Number', type: 'text' },
+          { key: 'address', label: 'Residential Address', type: 'text' },
+          { key: 'fir_no', label: 'FIR Number', type: 'text' },
+          { key: 'fir_date', label: 'FIR Date', type: 'text' },
           { key: 'offence', label: 'Offence (Sections)', type: 'text' },
-          { key: 'ps', label: 'Police Station', type: 'text' }
+          { key: 'ps', label: 'Police Station', type: 'text' },
+          { key: 'district', label: 'District', type: 'text' },
+          { key: 'complainant', label: 'Complainant Name', type: 'text' },
+          { key: 'fir_details', label: 'Details of FIR / Facts of Case', type: 'textarea' },
+          { key: 'delayed_months', label: 'Delay in Lodging FIR (months)', type: 'text' },
+          { key: 'advocate', label: 'Advocate Name', type: 'text' }
         ],
-        checklist: ['Copy of FIR', 'Remand Order', 'Vakalatnama', 'ID Copy'],
-        generate: function(d) { return _fill("IN THE COURT OF {court}\n\nCrl. Misc. No. ____ / 2025\n\n{petitioner} caste {caste} \n(Petitioner)\n\nVERSUS\n\nThe State\n(Respondent)\n\nPETITION FOR POST-ARREST BAIL UNDER SECTION 497 Cr.P.C\n\nCASE FIR NO: {fir} \nOFFENCE: {offence}\nPOLICE STATION: {ps}\n\nRespectfully Sheweth:\n\n1. That the Petitioner was arrested in the above case and is currently behind bars.\n2. That the Petitioner is innocent and has been falsely implicated due to mala fide intentions.\n3. That the investigation is complete and no recovery is to be effected.\n4. That the offence does not fall within the prohibitory clause of Section 497 Cr.P.C.\n\nPRAYER:\nIt is respectfully prayed that this petition may be accepted and the Petitioner be released on bail.\n\nPetitioner\nThrough Counsel", d); }
+        checklist: ['Copy of FIR (Annexure-A)', 'Remand / Judicial Lockup Order', 'Vakalatnama', 'Copy of CNIC', 'Power of Attorney'],
+        generate: function(d) { return _fill("IN THE COURT OF {court}\nPS  {ps_court}\n\n\nBA. No. {ba_no}                                                           {year}\n\n1. {petitioner} S/o {father} Caste {caste} R/o {address}\n\n                                                            Petitioner\n\n                              Vs\n\nThe State\n\n                                                            Respondent\n\nCase FIR No.             {fir_no} Dated: {fir_date}\nPS                           {ps}\nOffence Under Section    {offence}\nDistrict:                {district}\n\n\nPetition Under Section 497 CR PC for the Grant of Post-arrest Bail\n\n\nRespectfully Sheweth:\n\n1. That the present petitioner has been arrested in the above titled case which has been registered at the instance of {complainant}, the complainant, at the Police Station {ps} and presently is in the judicial lockup.\n\n2. That according to the contents of the FIR, {fir_details}\n\n3. That the petitioner is quite innocent. The allegation is absolutely false, baseless, concocted and based upon malafied intention of the complainant, and the FIR was lodged with malafied intention with the convenience of local police; the petitioner has nothing to do with the alleged occurrence.\n\n4. That the petitioner seeks post-arrest bail inter alia on the following:\n\n\nGROUNDS\n\na. That the petitioner has been involved in this case with malafide intention and ulterior motives just to humiliate, harass and black-mail him.\n\nb. That there is an unexplained delay of {delayed_months} months in lodging the FIR, which clarifies the malafied intention of the Complainant and shows how the story of FIR was prepared.\n\nc. That the offence mentioned in the FIR does not fall under the prohibitory clause of Section 497 Cr.P.C.\n\nd. That the petitioner is previously non-convicted and belongs to respectable families of the locality; if the petitioner is not released on bail, he will be humiliated.\n\ne. That there is no apprehension of the petitioner absconding or tampering with the prosecution evidence in case the petitioner is admitted to bail.\n\nf. That the offence under section {offence} does not fall within the prohibitory clause of Section 497 CR.P.C and the maximum punishment is three years.\n\ng. That the transaction between the accused and the complainant is one of a civil nature which makes this a civil matter; evidence to prove the real facts of the case is still pending.\n\nh. That this is a case requiring further inquiry and bail could not be refused when no further investigation was to be made.\n\ni. That there is no recovery to be effected from the petitioner and the investigation is complete.\n\nj. That the petitioner has no concern in any manner whatsoever with the concerned allegation; the petitioner is ready to furnish the surety bond for the satisfaction of this Honorable Court.\n\n\nPrayer\n\nIt is therefore, respectfully prayed that this petition may kindly be accepted and the petitioner may kindly be admitted to post-arrest bail till the final decision of this case.\n\n\n                                                            Petitioner\n\n\nThrough\n\n\n                                                  {advocate}\n                                                  Advocate High Court", d); }
       },
       Urdu: {
         inputs: [
