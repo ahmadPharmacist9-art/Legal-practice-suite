@@ -355,7 +355,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- NAVBAR -->
 <div id="navbar">
-  <div><h1>&#x2696;&#xFE0F; Legal Practice Suite</h1><p>Pakistan &#x2022; 36 Templates &#x2022; AI &#x2022; Case Diary</p></div>
+  <div><h1>&#x2696;&#xFE0F; Legal Practice Suite</h1><p>Pakistan &#x2022; 37 Templates &#x2022; AI &#x2022; Case Diary</p></div>
   <button id="btn-back">&#x2190; Menu</button>
   <button onclick="authChangePassword()" style="margin-left:6px;background:#1e293b;border:none;color:#f59e0b;font-size:18px;padding:4px 8px;border-radius:8px;cursor:pointer;line-height:1" title="Change Password">&#x1F512;</button>
 </div>
@@ -1888,7 +1888,67 @@ var TEMPLATES = {
         generate: function(d) { return _fill("\u0628\u0639\u062f\u0627\u0644\u062a {court}\n\n{suit_title}\n({suit_nature})\n\n\u062c\u0648\u0627\u0628 \u062f\u0631\u062e\u0648\u0627\u0633\u062a {app_date}\n\n\u0627\u0633\u062a\u062f\u0639\u0627: \u062f\u0631\u062e\u0648\u0627\u0633\u062a \u062e\u0627\u0631\u062c \u06a9\u06cc \u062c\u0627\u0626\u06d2\n\n{advocate}\n\u0648\u06a9\u06cc\u0644 \u06c1\u0627\u0626\u06cc \u06a9\u0648\u0631\u0679", d); }
       }
     }
+  },
+
+  // ==============================
+  // SUPERDARI APPLICATION
+  // ==============================
+  superdari: {
+    id: 'superdari',
+    category: 'Criminal',
+    type: 'Application',
+    name: 'Superdari Application (S. 516-A)',
+    desc: 'Petition U/S 516-A CrPC for interim custody of seized articles.',
+    formats: {
+      English: {
+        inputs: [
+          { key: 'court',       label: 'Court Name',                    type: 'text' },
+          { key: 'ps_court',    label: 'PS / Location of Court',        type: 'text' },
+          { key: 'p1_name',     label: 'Petitioner 1 Name',             type: 'text' },
+          { key: 'p2_name',     label: 'Petitioner 2 Name (if any)',    type: 'text' },
+          { key: 'p3_name',     label: 'Petitioner 3 Name (if any)',    type: 'text' },
+          { key: 'father',      label: 'Father Name (shared)',          type: 'text' },
+          { key: 'address',     label: 'Residential Address',           type: 'text' },
+          { key: 'fir_no',      label: 'FIR Number',                    type: 'text' },
+          { key: 'fir_date',    label: 'FIR Date',                      type: 'text' },
+          { key: 'offence',     label: 'Offence (Sections)',            type: 'text' },
+          { key: 'ps',          label: 'Police Station (Registered At)',type: 'text' },
+          { key: 'p1_articles', label: 'Articles from Petitioner 1 (one per line)', type: 'textarea' },
+          { key: 'p2_articles', label: 'Articles from Petitioner 2 (one per line)', type: 'textarea' },
+          { key: 'p3_articles', label: 'Articles from Petitioner 3 (one per line)', type: 'textarea' },
+          { key: 'advocate',    label: 'Advocate Name',                 type: 'text' }
+        ],
+        checklist: ['Copy of FIR (Annexure-A)', 'Seizure Memo / Recovery List', 'Vakalatnama', 'Copy of CNIC of each Petitioner'],
+        generate: function(d) {
+          var p2line = d.p2_name ? '\n2-   ' + d.p2_name : '';
+          var p3line = d.p3_name ? '\n3-   ' + d.p3_name : '';
+          var p2articles = (d.p2_name && d.p2_articles) ? '\n\n      (ii)   From Petitioner No.2 (' + d.p2_name + ')\n' + d.p2_articles.split('\n').map(function(x,i){return '               '+(String.fromCharCode(97+i)+')\t'+x.trim());}).join('\n') : '';
+          var p3articles = (d.p3_name && d.p3_articles) ? '\n\n      (iii)  From Petitioner No.3 (' + d.p3_name + ')\n' + d.p3_articles.split('\n').map(function(x,i){return '               '+(String.fromCharCode(97+i)+')\t'+x.trim());}).join('\n') : '';
+          var p1arts = d.p1_articles ? d.p1_articles.split('\n').map(function(x,i){return '               '+(String.fromCharCode(97+i)+')\t'+x.trim());}).join('\n') : '               a)\t______';
+          return _fill("IN THE COURT OF {court}\nP. S. {ps_court}\n\n\n1-   {p1_name}" + p2line + p3line + "\n     Sons of {father},\n     Residents of {address}\n\n                                                            ....PETITIONERS\n\n                              VERSUS\n\nThe State\n\n                                                            ... Respondent\n\n\nPETITION U/S 516-A Cr. P.C. FOR SUPERDARI\n\n             In Case FIR No. {fir_no}, Dated: {fir_date}\n             Offence u/s {offence} PPC\n             Registered at P. S. {ps}\n\n\nRespectfully Sheweth:-\n\n1-   That the petitioners who have been made accused in the above mentioned case and were arrested by the Local Police of P. S. {ps} seek the Superdari / interim custody of following items recovered from them and taken into custody by the local police.\n\n      (i)   From Petitioner No.1 ({p1_name})\n" + p1arts + p2articles + p3articles + "\n\n2-   That if these articles remained in the custody of local police, there is every apprehension of their loss, damage, and misuse.\n\n3-   That the petitioners undertake to produce these articles as and when directed by this learned court.\n\n     In these circumstances, it is therefore, most humbly prayed that the above detailed articles be directed to be handed over to the petitioners on superdari.\n\n\n                                                            Petitioners\n\nThrough:\n\n                                             {advocate}\n                                             Advocate High Court", d);
+        }
+      },
+      Urdu: {
+        inputs: [
+          { key: 'court',       label: 'عدالت کا نام',    type: 'text' },
+          { key: 'ps_court',    label: 'تھانہ / مقام',    type: 'text' },
+          { key: 'p1_name',     label: 'سائل نمبر 1',      type: 'text' },
+          { key: 'p2_name',     label: 'سائل نمبر 2',      type: 'text' },
+          { key: 'father',      label: 'والد کا نام',      type: 'text' },
+          { key: 'address',     label: 'رہائشی پتہ',       type: 'text' },
+          { key: 'fir_no',      label: 'مقدمہ نمبر',       type: 'text' },
+          { key: 'fir_date',    label: 'تاریخ',            type: 'text' },
+          { key: 'offence',     label: 'بجرم',             type: 'text' },
+          { key: 'ps',          label: 'تھانہ',            type: 'text' },
+          { key: 'articles',    label: 'اشیاء کی تفصیل',   type: 'textarea' },
+          { key: 'advocate',    label: 'وکیل',             type: 'text' }
+        ],
+        checklist: ['ایف آئی آر', 'ضبطی فہرست', 'وکالت نامہ', 'شناختی کارڈ'],
+        generate: function(d) { return _fill('بعدالت {court}\nتھانہ {ps_court}\n\n{p1_name}\n{p2_name}\nولد ان {father}\nساکنان {address}\n\nسائلین\nبنام\nسرکار\n\nدرخواست سپرداری زیر دفعہ 516-A\n\nمقدمہ نمبر: {fir_no} تاریخ: {fir_date}\nبجرم: {offence}، تھانہ {ps}\n\n۱. یہ کہ سائلین مذکورہ مقدمہ میں ملزمان ہیں اور مندرجہ ذیل اشیاء سپرداری پر واپس چاہتے ہیں:\n{articles}\n\n۲. یہ کہ پولیس کی زیر نگرانی رہنے سے اشیاء کے ضائع ہونے کا اندیشہ ہے۔\n\n۳. یہ کہ سائلین عدالت کے حکم پر اشیاء پیش کرنے کا عہد کرتے ہیں۔\n\nاستدعا: مذکورہ اشیاء سپرداری پر واپس کی جائیں۔\n\n{advocate}\nوکیل ہائی کورٹ', d); }
+      }
+    }
   }
+
 };
 
 
