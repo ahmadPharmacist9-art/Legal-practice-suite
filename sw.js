@@ -1,5 +1,5 @@
-/* Legal Practice Suite – Service Worker v3 */
-var CACHE = 'legal-suite-v3';
+/* Legal Practice Suite – Service Worker v4 */
+var CACHE = 'legal-suite-v4';
 var APP_FILES = [
   './index.html',
   './manifest.json',
@@ -31,6 +31,21 @@ self.addEventListener('fetch', function(e) {
   var url = e.request.url;
   /* Always go network for AI API calls */
   if (url.indexOf('anthropic.com') !== -1 || url.indexOf('googleapis.com') !== -1) {
+    return;
+  }
+  /* Always fetch index.html from network so auth fixes deploy immediately */
+  if (url.indexOf('index.html') !== -1 || url.endsWith('/')) {
+    e.respondWith(
+      fetch(e.request).then(function(response) {
+        if (response && response.status === 200) {
+          var clone = response.clone();
+          caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
+        }
+        return response;
+      }).catch(function() {
+        return caches.match(e.request);
+      })
+    );
     return;
   }
   e.respondWith(
